@@ -111,7 +111,12 @@
 
     var current = -1;
     var animating = false;
-    var DURATION = 250; // ms
+    // 本物(imagelightbox)のタイミングに準拠
+    var ENTER = 350;          // 入場: animationSpeed(250) + 100 の調整遅延ぶんをふまえた体感時間
+    var EXIT = 250;           // 退場: animationSpeed
+    var SLIDE = 100;          // スライド距離(px): 本物の 100*t オフセット
+    var START_DELAY = 50;     // 本物の setTimeout(...,50) 相当の始動遅延
+    var SWING = 'ease-in-out';// jQuery の swing 相当のイージング
 
     function showLoading() { loading.style.display = 'block'; }
     function hideLoading() { loading.style.display = 'none'; }
@@ -124,19 +129,28 @@
       pre.src = src;
     }
 
+    // 右(+SLIDE)から中央へ、フェードしながらゆったりスライドインさせる
+    function enterFrom(offset) {
+      bigImg.style.transition = 'none';
+      bigImg.style.transform = 'translateX(' + offset + 'px)';
+      bigImg.style.opacity = '0';
+      void bigImg.offsetWidth; // 開始状態を確定
+      setTimeout(function () {
+        bigImg.style.transition = 'transform ' + ENTER + 'ms ' + SWING + ', opacity ' + ENTER + 'ms ' + SWING;
+        bigImg.style.transform = 'translateX(0)';
+        bigImg.style.opacity = '1';
+      }, START_DELAY);
+    }
+
     function open(i) {
       overlay.classList.add('is-open');
       current = i;
-      // 読み込み中は画像を隠す
       bigImg.style.transition = 'none';
-      bigImg.style.transform = 'translateX(0)';
       bigImg.style.opacity = '0';
       preload(gallery[i].href, function () {
         bigImg.src = gallery[i].href;
         bigImg.alt = gallery[i].alt;
-        void bigImg.offsetWidth;
-        bigImg.style.transition = 'opacity ' + DURATION + 'ms ease';
-        bigImg.style.opacity = '1';
+        enterFrom(SLIDE); // 読み込み完了後にふわっとフェード＆スライドイン
       });
     }
 
@@ -145,26 +159,19 @@
       if (animating || gallery.length < 2) return;
       animating = true;
       var nextIndex = (current + 1) % gallery.length; // 末尾→先頭ループ
-      // 現在の画像を左へスライドアウト
-      bigImg.style.transition = 'transform ' + DURATION + 'ms ease, opacity ' + DURATION + 'ms ease';
-      bigImg.style.transform = 'translateX(-40px)';
+      // 現在の画像を左へフェード＆スライドアウト
+      bigImg.style.transition = 'transform ' + EXIT + 'ms ' + SWING + ', opacity ' + EXIT + 'ms ' + SWING;
+      bigImg.style.transform = 'translateX(-' + SLIDE + 'px)';
       bigImg.style.opacity = '0';
       setTimeout(function () {
         current = nextIndex;
         preload(gallery[nextIndex].href, function () {
-          // 新しい画像を右側にセットしてからスライドイン
           bigImg.src = gallery[nextIndex].href;
           bigImg.alt = gallery[nextIndex].alt;
-          bigImg.style.transition = 'none';
-          bigImg.style.transform = 'translateX(40px)';
-          bigImg.style.opacity = '0';
-          void bigImg.offsetWidth; // リフローを強制
-          bigImg.style.transition = 'transform ' + DURATION + 'ms ease, opacity ' + DURATION + 'ms ease';
-          bigImg.style.transform = 'translateX(0)';
-          bigImg.style.opacity = '1';
-          setTimeout(function () { animating = false; }, DURATION);
+          enterFrom(SLIDE); // 次の画像を右からゆったり入場
+          setTimeout(function () { animating = false; }, ENTER + START_DELAY);
         });
-      }, DURATION);
+      }, EXIT);
     }
 
     function close() {

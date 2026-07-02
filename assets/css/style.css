@@ -166,7 +166,8 @@ h1,h2,h3,p{ margin:0; }
   position:fixed; inset:0; background:rgba(255,255,255,.9); z-index:1000;
   display:none; align-items:center; justify-content:center; cursor:pointer; padding:20px; overflow:hidden;
 }
-.lightbox_overlay.is-open{ display:flex; }
+.lightbox_overlay.is-open{ display:flex; animation:lb-overlay-fade .25s ease; }
+@keyframes lb-overlay-fade{ from{ opacity:0; } to{ opacity:1; } }
 .lightbox_overlay img{
   max-width:90vw; max-height:85vh; box-shadow:0 4px 30px rgba(0,0,0,.25); background:#fff;
   cursor:pointer; will-change:transform,opacity;
