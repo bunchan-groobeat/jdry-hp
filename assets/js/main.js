@@ -81,40 +81,99 @@
       .catch(function (e) { /* 失敗時はプレースホルダーのまま */ console.warn('Instagram feed:', e); });
   }
 
-  /* ---------- ライトボックス（商品画像の拡大） ----------
-     現サイト(imagelightbox)と同様に、サムネイルをクリックすると
-     暗い半透明オーバーレイ上に大きい画像を表示する。
+  /* ---------- ライトボックス（商品画像の拡大＋ギャラリー送り） ----------
+     現サイト(imagelightbox)と同様の挙動:
+     ・サムネイルをクリック → 暗い半透明オーバーレイ上に拡大表示
+     ・拡大中に画像をクリック → 次の画像へスライド遷移（末尾で先頭へループ）
+     ・閉じるのは Esc キー または 画像の外側（背景）クリック
   ------------------------------------------------------------ */
   function initLightbox() {
     var links = document.querySelectorAll('a.thumb[href$=".jpg"], a.thumb[href$=".png"], a.thumb[href$=".jpeg"]');
     if (!links.length) return;
+
+    // ギャラリー（DOM順）を配列化
+    var gallery = Array.prototype.map.call(links, function (a) {
+      var t = a.querySelector('img');
+      return { href: a.getAttribute('href'), alt: t ? t.alt : '' };
+    });
 
     var overlay = document.createElement('div');
     overlay.className = 'lightbox_overlay';
     overlay.innerHTML = '<button class="lightbox_close" type="button" aria-label="閉じる">&times;</button><img alt="">';
     document.body.appendChild(overlay);
     var bigImg = overlay.querySelector('img');
+    var closeBtn = overlay.querySelector('.lightbox_close');
 
-    function open(src, alt) {
-      bigImg.src = src;
-      bigImg.alt = alt || '';
+    var current = -1;
+    var animating = false;
+    var DURATION = 250; // ms
+
+    // 画像を即時セット（初回表示用）
+    function setImmediate(i) {
+      current = i;
+      bigImg.style.transition = 'none';
+      bigImg.style.transform = 'translateX(0)';
+      bigImg.style.opacity = '1';
+      bigImg.src = gallery[i].href;
+      bigImg.alt = gallery[i].alt;
+    }
+
+    // 次の画像へスライド遷移
+    function slideNext() {
+      if (animating || gallery.length < 2) return;
+      animating = true;
+      var nextIndex = (current + 1) % gallery.length; // 末尾→先頭ループ
+      // 現在の画像を左へスライドアウト
+      bigImg.style.transition = 'transform ' + DURATION + 'ms ease, opacity ' + DURATION + 'ms ease';
+      bigImg.style.transform = 'translateX(-40px)';
+      bigImg.style.opacity = '0';
+      setTimeout(function () {
+        // 新しい画像を右側にセットしてからスライドイン
+        current = nextIndex;
+        bigImg.src = gallery[nextIndex].href;
+        bigImg.alt = gallery[nextIndex].alt;
+        bigImg.style.transition = 'none';
+        bigImg.style.transform = 'translateX(40px)';
+        bigImg.style.opacity = '0';
+        void bigImg.offsetWidth; // リフローを強制
+        bigImg.style.transition = 'transform ' + DURATION + 'ms ease, opacity ' + DURATION + 'ms ease';
+        bigImg.style.transform = 'translateX(0)';
+        bigImg.style.opacity = '1';
+        setTimeout(function () { animating = false; }, DURATION);
+      }, DURATION);
+    }
+
+    function open(i) {
+      setImmediate(i);
       overlay.classList.add('is-open');
     }
     function close() {
       overlay.classList.remove('is-open');
       bigImg.src = '';
+      current = -1;
+      animating = false;
     }
 
-    Array.prototype.forEach.call(links, function (a) {
+    // サムネイルクリックで開く
+    Array.prototype.forEach.call(links, function (a, i) {
       a.addEventListener('click', function (e) {
         e.preventDefault();
-        var t = a.querySelector('img');
-        open(a.getAttribute('href'), t ? t.alt : '');
+        open(i);
       });
     });
+
+    // 拡大画像クリック → 次へ（閉じない）
+    bigImg.addEventListener('click', function (e) {
+      e.stopPropagation();
+      slideNext();
+    });
+    // 背景（画像の外側）クリック → 閉じる
     overlay.addEventListener('click', close);
+    // ×ボタン → 閉じる
+    closeBtn.addEventListener('click', function (e) { e.stopPropagation(); close(); });
+    // Escキー → 閉じる
     document.addEventListener('keydown', function (e) {
-      if (e.key === 'Escape' || e.keyCode === 27) close();
+      if (overlay.classList.contains('is-open') && (e.key === 'Escape' || e.keyCode === 27)) close();
     });
   }
 
