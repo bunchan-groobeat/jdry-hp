@@ -99,10 +99,9 @@
 
     var overlay = document.createElement('div');
     overlay.className = 'lightbox_overlay';
-    overlay.innerHTML = '<button class="lightbox_close" type="button" aria-label="閉じる">&times;</button><img alt="">';
+    overlay.innerHTML = '<img alt="">';
     document.body.appendChild(overlay);
     var bigImg = overlay.querySelector('img');
-    var closeBtn = overlay.querySelector('.lightbox_close');
 
     var current = -1;
     var animating = false;
@@ -169,8 +168,6 @@
     });
     // 背景（画像の外側）クリック → 閉じる
     overlay.addEventListener('click', close);
-    // ×ボタン → 閉じる
-    closeBtn.addEventListener('click', function (e) { e.stopPropagation(); close(); });
     // Escキー → 閉じる
     document.addEventListener('keydown', function (e) {
       if (overlay.classList.contains('is-open') && (e.key === 'Escape' || e.keyCode === 27)) close();

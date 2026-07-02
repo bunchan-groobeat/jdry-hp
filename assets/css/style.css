@@ -156,21 +156,18 @@ h1,h2,h3,p{ margin:0; }
 .menu_item .thumb::after{ content:""; position:absolute; inset:0; box-shadow:inset 0 0 0 0 rgba(255,255,255,0); transition:box-shadow .2s; }
 .menu_item .thumb:hover::after{ box-shadow:inset 0 0 0 10px rgba(255,255,255,.3); }
 .menu_item .title{ display:block; font-size:14px; font-weight:bold; line-height:1.6; margin:12px 0 8px; }
-.menu_item .excerpt{ font-size:12px; line-height:2; color:#555; }
+/* 一覧では商品名のみ表示（説明文は非表示。ライトボックス用に情報は残す） */
+.menu_item .excerpt{ display:none; }
 
 /* ライトボックス（画像拡大） */
 .lightbox_overlay{
-  position:fixed; inset:0; background:rgba(0,0,0,.8); z-index:1000;
+  position:fixed; inset:0; background:rgba(255,255,255,.9); z-index:1000;
   display:none; align-items:center; justify-content:center; cursor:pointer; padding:20px; overflow:hidden;
 }
 .lightbox_overlay.is-open{ display:flex; }
 .lightbox_overlay img{
-  max-width:90%; max-height:90%; box-shadow:0 0 40px rgba(0,0,0,.5); background:#fff;
+  max-width:90vw; max-height:85vh; box-shadow:0 4px 30px rgba(0,0,0,.25); background:#fff;
   cursor:pointer; will-change:transform,opacity;
-}
-.lightbox_close{
-  position:absolute; top:20px; right:26px; color:#fff; font-size:34px; line-height:1;
-  background:none; border:none; cursor:pointer; z-index:2;
 }
 
 /* =========================================================
