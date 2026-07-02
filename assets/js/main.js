@@ -103,21 +103,44 @@
     document.body.appendChild(overlay);
     var bigImg = overlay.querySelector('img');
 
+    // ローディング表示（imagelightbox標準）
+    var loading = document.createElement('div');
+    loading.className = 'lb_loading';
+    loading.innerHTML = '<div></div>';
+    document.body.appendChild(loading);
+
     var current = -1;
     var animating = false;
     var DURATION = 250; // ms
 
-    // 画像を即時セット（初回表示用）
-    function setImmediate(i) {
-      current = i;
-      bigImg.style.transition = 'none';
-      bigImg.style.transform = 'translateX(0)';
-      bigImg.style.opacity = '1';
-      bigImg.src = gallery[i].href;
-      bigImg.alt = gallery[i].alt;
+    function showLoading() { loading.style.display = 'block'; }
+    function hideLoading() { loading.style.display = 'none'; }
+
+    // 画像を先読みし、読み込み完了後にコールバック（読み込み中はローディング表示）
+    function preload(src, cb) {
+      showLoading();
+      var pre = new Image();
+      pre.onload = pre.onerror = function () { hideLoading(); cb(); };
+      pre.src = src;
     }
 
-    // 次の画像へスライド遷移
+    function open(i) {
+      overlay.classList.add('is-open');
+      current = i;
+      // 読み込み中は画像を隠す
+      bigImg.style.transition = 'none';
+      bigImg.style.transform = 'translateX(0)';
+      bigImg.style.opacity = '0';
+      preload(gallery[i].href, function () {
+        bigImg.src = gallery[i].href;
+        bigImg.alt = gallery[i].alt;
+        void bigImg.offsetWidth;
+        bigImg.style.transition = 'opacity ' + DURATION + 'ms ease';
+        bigImg.style.opacity = '1';
+      });
+    }
+
+    // 次の画像へスライド遷移（読み込み中はローディング表示）
     function slideNext() {
       if (animating || gallery.length < 2) return;
       animating = true;
@@ -127,27 +150,26 @@
       bigImg.style.transform = 'translateX(-40px)';
       bigImg.style.opacity = '0';
       setTimeout(function () {
-        // 新しい画像を右側にセットしてからスライドイン
         current = nextIndex;
-        bigImg.src = gallery[nextIndex].href;
-        bigImg.alt = gallery[nextIndex].alt;
-        bigImg.style.transition = 'none';
-        bigImg.style.transform = 'translateX(40px)';
-        bigImg.style.opacity = '0';
-        void bigImg.offsetWidth; // リフローを強制
-        bigImg.style.transition = 'transform ' + DURATION + 'ms ease, opacity ' + DURATION + 'ms ease';
-        bigImg.style.transform = 'translateX(0)';
-        bigImg.style.opacity = '1';
-        setTimeout(function () { animating = false; }, DURATION);
+        preload(gallery[nextIndex].href, function () {
+          // 新しい画像を右側にセットしてからスライドイン
+          bigImg.src = gallery[nextIndex].href;
+          bigImg.alt = gallery[nextIndex].alt;
+          bigImg.style.transition = 'none';
+          bigImg.style.transform = 'translateX(40px)';
+          bigImg.style.opacity = '0';
+          void bigImg.offsetWidth; // リフローを強制
+          bigImg.style.transition = 'transform ' + DURATION + 'ms ease, opacity ' + DURATION + 'ms ease';
+          bigImg.style.transform = 'translateX(0)';
+          bigImg.style.opacity = '1';
+          setTimeout(function () { animating = false; }, DURATION);
+        });
       }, DURATION);
     }
 
-    function open(i) {
-      setImmediate(i);
-      overlay.classList.add('is-open');
-    }
     function close() {
       overlay.classList.remove('is-open');
+      hideLoading();
       bigImg.src = '';
       current = -1;
       animating = false;

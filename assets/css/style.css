@@ -171,6 +171,22 @@ h1,h2,h3,p{ margin:0; }
   max-width:90vw; max-height:85vh; box-shadow:0 4px 30px rgba(0,0,0,.25); background:#fff;
   cursor:pointer; will-change:transform,opacity;
 }
+/* ローディング（imagelightbox標準表示を再現） */
+.lb_loading, .lb_loading div{ border-radius:50%; box-sizing:content-box; }
+.lb_loading{
+  display:none; width:40px; height:40px; background:rgba(0,0,0,.5);
+  position:fixed; z-index:1002; top:50%; left:50%; padding:10px; margin:-40px 0 0 -40px;
+  box-shadow:0 0 40px rgba(0,0,0,.75);
+}
+.lb_loading div{
+  width:40px; height:40px; background:#fff;
+  animation:imagelightbox-loading .5s ease infinite;
+}
+@keyframes imagelightbox-loading{
+  from{ opacity:.5; transform:scale(.6); }
+  50% { opacity:1; transform:scale(1); }
+  to  { opacity:.5; transform:scale(.6); }
+}
 
 /* =========================================================
    Topics / お知らせ
