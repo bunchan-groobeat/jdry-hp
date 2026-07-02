@@ -123,13 +123,15 @@ h1,h2,h3,p{ margin:0; }
 .product_grid .product{
   width:240px; height:240px; position:relative; overflow:hidden; border:13px solid var(--beige);
 }
+.product_grid .product .thumb{ display:block; width:100%; height:100%; cursor:pointer; }
 .product_grid .product img{ width:100%; height:100%; object-fit:cover; display:block; }
 .product_grid .product .title{
   position:absolute; left:0; bottom:0; width:100%; padding:15px 10px; text-align:center;
-  color:#fff; background:rgba(0,0,0,.45); transform:translateY(100%); transition:transform .25s;
-  font-size:13px; line-height:1.5;
+  color:#fff !important; background:rgba(0,0,0,.45); transform:translateY(100%); transition:transform .25s;
+  font-size:13px; line-height:1.5; z-index:2;
 }
 .product_grid .product:hover .title{ transform:translateY(0); }
+.product_grid .product .title:hover{ color:#fff !important; }
 .product_grid .product.coming .title{ transform:translateY(0); background:rgba(0,0,0,.35); }
 
 /* 新商品バッジ */
