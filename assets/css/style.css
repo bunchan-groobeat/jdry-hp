@@ -188,6 +188,12 @@ h1,h2,h3,p{ margin:0; }
   50% { opacity:1; transform:scale(1); }
   to  { opacity:.5; transform:scale(.6); }
 }
+/* キャプション（商品名の帯）imagelightbox標準を再現 */
+.lb_caption{
+  display:none; position:fixed; left:0; right:0; bottom:0; z-index:1003;
+  text-align:center; font-weight:bold; font-size:14px; color:#fff; padding:20px;
+  background:rgba(0,0,0,.6); border-top:1px solid #333; box-shadow:0 0 5px 0 rgba(0,0,0,.5);
+}
 
 /* =========================================================
    Topics / お知らせ

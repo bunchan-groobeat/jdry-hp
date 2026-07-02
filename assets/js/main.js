@@ -109,6 +109,11 @@
     loading.innerHTML = '<div></div>';
     document.body.appendChild(loading);
 
+    // キャプション（商品名の帯）
+    var caption = document.createElement('div');
+    caption.className = 'lb_caption';
+    document.body.appendChild(caption);
+
     var current = -1;
     var animating = false;
     // 本物(imagelightbox)のタイミングに準拠
@@ -120,10 +125,17 @@
 
     function showLoading() { loading.style.display = 'block'; }
     function hideLoading() { loading.style.display = 'none'; }
+    // 本物のフロー: 読み込み開始でキャプション非表示 → 完了で商品名を表示
+    function showCaption(text) {
+      caption.textContent = text || '';
+      caption.style.display = text ? 'block' : 'none';
+    }
+    function hideCaption() { caption.style.display = 'none'; }
 
-    // 画像を先読みし、読み込み完了後にコールバック（読み込み中はローディング表示）
+    // 画像を先読みし、読み込み完了後にコールバック（読み込み中はローディング表示・キャプション非表示）
     function preload(src, cb) {
       showLoading();
+      hideCaption();
       var pre = new Image();
       pre.onload = pre.onerror = function () { hideLoading(); cb(); };
       pre.src = src;
@@ -151,6 +163,7 @@
         bigImg.src = gallery[i].href;
         bigImg.alt = gallery[i].alt;
         enterFrom(SLIDE); // 読み込み完了後にふわっとフェード＆スライドイン
+        showCaption(gallery[i].alt); // 商品名の帯を表示
       });
     }
 
@@ -169,6 +182,7 @@
           bigImg.src = gallery[nextIndex].href;
           bigImg.alt = gallery[nextIndex].alt;
           enterFrom(SLIDE); // 次の画像を右からゆったり入場
+          showCaption(gallery[nextIndex].alt); // 商品名を切り替え
           setTimeout(function () { animating = false; }, ENTER + START_DELAY);
         });
       }, EXIT);
@@ -177,6 +191,7 @@
     function close() {
       overlay.classList.remove('is-open');
       hideLoading();
+      hideCaption();
       bigImg.src = '';
       current = -1;
       animating = false;
