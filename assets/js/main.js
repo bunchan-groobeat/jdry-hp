@@ -81,6 +81,43 @@
       .catch(function (e) { /* 失敗時はプレースホルダーのまま */ console.warn('Instagram feed:', e); });
   }
 
+  /* ---------- ライトボックス（商品画像の拡大） ----------
+     現サイト(imagelightbox)と同様に、サムネイルをクリックすると
+     暗い半透明オーバーレイ上に大きい画像を表示する。
+  ------------------------------------------------------------ */
+  function initLightbox() {
+    var links = document.querySelectorAll('a.thumb[href$=".jpg"], a.thumb[href$=".png"], a.thumb[href$=".jpeg"]');
+    if (!links.length) return;
+
+    var overlay = document.createElement('div');
+    overlay.className = 'lightbox_overlay';
+    overlay.innerHTML = '<button class="lightbox_close" type="button" aria-label="閉じる">&times;</button><img alt="">';
+    document.body.appendChild(overlay);
+    var bigImg = overlay.querySelector('img');
+
+    function open(src, alt) {
+      bigImg.src = src;
+      bigImg.alt = alt || '';
+      overlay.classList.add('is-open');
+    }
+    function close() {
+      overlay.classList.remove('is-open');
+      bigImg.src = '';
+    }
+
+    Array.prototype.forEach.call(links, function (a) {
+      a.addEventListener('click', function (e) {
+        e.preventDefault();
+        var t = a.querySelector('img');
+        open(a.getAttribute('href'), t ? t.alt : '');
+      });
+    });
+    overlay.addEventListener('click', close);
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' || e.keyCode === 27) close();
+    });
+  }
+
   /* ---------- ページ上部へ戻る ---------- */
   function initReturnTop() {
     var btn = document.getElementById('return_top');
@@ -94,6 +131,7 @@
   document.addEventListener('DOMContentLoaded', function () {
     initSlider();
     initInstagram();
+    initLightbox();
     initReturnTop();
   });
 })();

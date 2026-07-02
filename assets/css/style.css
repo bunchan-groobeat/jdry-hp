@@ -158,6 +158,18 @@ h1,h2,h3,p{ margin:0; }
 .menu_item .title{ display:block; font-size:14px; font-weight:bold; line-height:1.6; margin:12px 0 8px; }
 .menu_item .excerpt{ font-size:12px; line-height:2; color:#555; }
 
+/* ライトボックス（画像拡大） */
+.lightbox_overlay{
+  position:fixed; inset:0; background:rgba(0,0,0,.8); z-index:1000;
+  display:none; align-items:center; justify-content:center; cursor:pointer; padding:20px;
+}
+.lightbox_overlay.is-open{ display:flex; }
+.lightbox_overlay img{ max-width:90%; max-height:90%; box-shadow:0 0 40px rgba(0,0,0,.5); background:#fff; }
+.lightbox_close{
+  position:absolute; top:20px; right:26px; color:#fff; font-size:34px; line-height:1;
+  background:none; border:none; cursor:pointer;
+}
+
 /* =========================================================
    Topics / お知らせ
 ========================================================= */
