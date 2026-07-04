@@ -45,8 +45,14 @@
 <div class="contact_wrap">
   <p class="contact_lead">お問い合わせは下記フォームよりお願いいたします。<br>内容を確認のうえ、担当者よりご返信いたします。</p>
 
-  <!-- 静的サイトのため送信先は未設定です。フォーム送信サービス（Formspree / Google Form 等）接続後に action を差し替えます。 -->
-  <form class="contact_form" action="#" method="post" onsubmit="alert('※フォーム送信先は未接続です。J-DRYさんの受信先メール／フォームサービス確定後に設定します。'); return false;">
+  <!--
+    Formspree 送信フォーム（宛先: miegarden8989@gmail.com）
+    ▼ 稼働手順: formspree.io で miegarden8989@gmail.com 宛のフォームを作成・認証し、
+      発行される https://formspree.io/f/xxxxxxxx の「xxxxxxxx」を下記 action の
+      YOUR_FORM_ID と置き換えるだけで送信が有効になります。
+      ID 未設定の間は main.js が誤送信を防ぎ、その旨をフォーム上に表示します。
+  -->
+  <form class="contact_form" action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
     <dl>
       <dt>お名前<span class="req">必須</span></dt>
       <dd><input type="text" name="name" required></dd>
@@ -63,6 +69,10 @@
       <dt>メッセージ<span class="req">必須</span></dt>
       <dd><textarea name="message" required></textarea></dd>
     </dl>
+    <!-- 迷惑メール対策のハニーポット（人間には非表示・bot が入力すると送信破棄） -->
+    <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden">
+    <input type="hidden" name="_subject" value="【J-DRY】お問い合わせ（Webサイト）">
+    <p class="form_status" role="status" aria-live="polite" hidden></p>
     <div class="contact_submit"><button type="submit">送信する</button></div>
   </form>
 </div>

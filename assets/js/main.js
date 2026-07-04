@@ -218,6 +218,61 @@
     });
   }
 
+  /* ---------- お問い合わせフォーム（Formspree 非同期送信） ---------- */
+  function initContactForm() {
+    var form = document.querySelector('.contact_form');
+    if (!form) return;
+    var status = form.querySelector('.form_status');
+    var button = form.querySelector('button[type=submit]');
+
+    function showStatus(msg, type) {
+      if (!status) return;
+      status.textContent = msg;
+      status.className = 'form_status is-' + type;
+      status.hidden = false;
+    }
+
+    // エンドポイント未設定（YOUR_FORM_ID のまま）なら送信させず案内表示
+    var configured = form.action.indexOf('YOUR_FORM_ID') === -1 &&
+                     /formspree\.io\/f\//.test(form.action);
+
+    form.addEventListener('submit', function (e) {
+      if (!configured) {
+        e.preventDefault();
+        showStatus('送信先が未設定です。管理者にご連絡ください。', 'error');
+        return;
+      }
+      // fetch 非対応ブラウザは通常POSTにフォールバック（既定動作を妨げない）
+      if (!window.fetch) return;
+
+      e.preventDefault();
+      button.disabled = true;
+      showStatus('送信中です…', 'pending');
+
+      fetch(form.action, {
+        method: 'POST',
+        body: new FormData(form),
+        headers: { Accept: 'application/json' }
+      }).then(function (res) {
+        if (res.ok) {
+          form.reset();
+          showStatus('お問い合わせを送信しました。ご返信まで少々お待ちください。', 'success');
+        } else {
+          return res.json().then(function (data) {
+            var msg = (data && data.errors && data.errors.length)
+              ? data.errors.map(function (x) { return x.message; }).join(' / ')
+              : '送信に失敗しました。時間をおいて再度お試しください。';
+            showStatus(msg, 'error');
+          });
+        }
+      }).catch(function () {
+        showStatus('通信エラーが発生しました。時間をおいて再度お試しください。', 'error');
+      }).then(function () {
+        button.disabled = false;
+      });
+    });
+  }
+
   /* ---------- ページ上部へ戻る ---------- */
   function initReturnTop() {
     var btn = document.getElementById('return_top');
@@ -232,6 +287,7 @@
     initSlider();
     initInstagram();
     initLightbox();
+    initContactForm();
     initReturnTop();
   });
 })();
