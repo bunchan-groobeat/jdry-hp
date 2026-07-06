@@ -21,10 +21,10 @@
 
 window.JDRY_CONFIG = {
   /* microCMS のサービスドメイン（サブドメイン部分のみ）。未設定なら空のまま。 */
-  MICROCMS_SERVICE_DOMAIN: '',
+  MICROCMS_SERVICE_DOMAIN: 'jdry',
 
   /* 読み取り専用（GETのみ）のAPIキー。未設定なら空のまま。 */
-  MICROCMS_API_KEY: '',
+  MICROCMS_API_KEY: 'R0lySquVWgH2yCgOLMvLdc1tSFe5hMEnft4p',
 
   /* microCMS で作成する API（エンドポイント）のID。スキーマ設計どおり "topics"。 */
   MICROCMS_ENDPOINT: 'topics',
