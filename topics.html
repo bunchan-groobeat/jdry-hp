@@ -44,6 +44,11 @@
 
 <div class="section_topics">
   <h1 class="archive_headline">お知らせ一覧</h1>
+  <!--
+    お知らせは microCMS から自動取得して表示します（assets/js/topics.js）。
+    接続情報(assets/js/config.js)が未設定の間は、下記の静的なお知らせをそのまま表示します。
+    接続後は topics.js が下記 <li> を microCMS の記事で置き換えます。
+  -->
   <ol id="archive_post_list">
     <li>
       <a class="image" href="topics.html"><img src="assets/img/products/line_27857481539840-355x210.jpg" alt="ホームページを開設致しました。"></a>
@@ -80,5 +85,7 @@
 
 <a id="return_top" href="#" aria-label="ページ上部へ戻る">↑</a>
 <script src="assets/js/main.js"></script>
+<script src="assets/js/config.js"></script>
+<script src="assets/js/topics.js"></script>
 </body>
 </html>

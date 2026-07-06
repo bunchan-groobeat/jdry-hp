@@ -221,6 +221,8 @@ h1,h2,h3,p{ margin:0; }
 
 /* アーカイブ一覧（TOPICSページ） */
 .archive_headline{ font-size:28px; font-weight:bold; line-height:1.8; margin:0 0 30px; font-family:var(--mincho); }
+/* Topics 状態表示（読み込み中／0件）: microCMS取得時のみ使用 */
+#archive_post_list li.topics_state{ display:block; border:none; padding:40px 0; margin:0; text-align:center; color:#888; font-size:14px; }
 #archive_post_list li{ border-bottom:1px dotted var(--beige-line); padding:0 0 40px; margin:0 0 30px; display:flex; gap:25px; align-items:flex-start; }
 #archive_post_list .image{ flex:0 0 355px; width:355px; height:210px; display:block; position:relative; overflow:hidden; }
 #archive_post_list .image img{ width:355px; height:210px; object-fit:cover; display:block; }
