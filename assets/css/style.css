@@ -100,6 +100,12 @@ h1,h2,h3,p{ margin:0; }
 }
 .slider_dots button.is-active,.slider_dots button:hover{ background:var(--base); }
 
+/* スマホ用メインスライダー（本物のsp_mainvisual準拠・PCでは非表示） */
+#sp_slider{ display:none; overflow:hidden; background:#fff; }
+#sp_slider .slide{ display:none; }
+#sp_slider .slide.is-active{ display:block; }
+#sp_slider img{ width:100%; display:block; }
+
 /* =========================================================
    トップ: ベージュ 2カラム帯 (content1 / content2)
 ========================================================= */
@@ -137,6 +143,9 @@ h1,h2,h3,p{ margin:0; }
 .product_grid .product:hover .title{ transform:translateY(0); }
 .product_grid .product .title:hover{ color:#fff !important; }
 .product_grid .product.coming .title{ transform:translateY(0); background:rgba(0,0,0,.35); }
+
+/* 一覧下のボタン */
+.archive_button{ text-align:center; margin-top:50px; }
 
 /* 新商品バッジ */
 .product .badge_new{
@@ -207,6 +216,8 @@ h1,h2,h3,p{ margin:0; }
 .news_list li{ border-bottom:1px dotted var(--beige-line); padding:0 0 20px; margin:0 0 20px; }
 .news_list .date{ font-size:14px; font-weight:bold; margin-right:15px; }
 .news_list .title{ font-size:14px; }
+/* HOMEお知らせのサムネイル（本物はモバイルのみ表示） */
+.news_thumb{ display:none; }
 
 /* アーカイブ一覧（TOPICSページ） */
 .archive_headline{ font-size:28px; font-weight:bold; line-height:1.8; margin:0 0 30px; font-family:var(--mincho); }
@@ -304,8 +315,9 @@ h1,h2,h3,p{ margin:0; }
 #footer_menu_list{ display:flex; flex-wrap:wrap; justify-content:center; gap:10px 24px; margin:0 auto 30px; }
 #footer_menu_list a{ font-size:12px; }
 #footer_social{ display:flex; justify-content:center; gap:18px; }
-#footer_social a{ font-size:20px; color:#aaa; }
+#footer_social a{ display:block; color:#333; }
 #footer_social a:hover{ color:var(--accent); }
+#footer_social svg{ display:block; }
 #footer_bottom{ height:80px; }
 #copyright{ text-align:center; line-height:80px; font-size:12px; color:#888; }
 
@@ -321,69 +333,134 @@ h1,h2,h3,p{ margin:0; }
   .insta_feed{ grid-template-columns:repeat(3,1fr); }
   .menu_items{ grid-template-columns:repeat(3,1fr); }
 }
-@media (max-width:640px){
-  .menu_items{ grid-template-columns:repeat(2,1fr); }
-}
 @media (max-width:820px){
-  /* ハンバーガーメニュー */
-  #header_inner{ padding:18px 0; }
+  /* =====================================================
+     モバイル表示（本物 sweety_tcd029/mobile/style-mobile2.css 準拠）
+  ===================================================== */
+
+  /* --- ヘッダー: ロゴ左（横型ロゴ・高さ20px）＋ハンバーガー右 --- */
+  #header{ height:60px; text-align:left; }
+  #header_inner{ display:flex; align-items:center; height:60px; padding:0; }
+  #logo_image{ margin:0; padding-left:15px; }
+  #logo_image img{ height:20px; width:auto; }
+
+  /* ハンバーガーボタン（本物 a.menu_button: 60x60・枠なし・#888の三本線） */
   .nav_toggle_btn{
-    display:inline-block; position:absolute; top:20px; right:20px; width:44px; height:38px;
-    border:1px solid var(--beige-line); background:#fff; cursor:pointer; border-radius:4px;
+    display:block; position:absolute; top:0; right:0; width:60px; height:60px;
+    border:none; background:transparent; cursor:pointer; border-radius:0;
   }
-  .nav_toggle_btn span,.nav_toggle_btn span::before,.nav_toggle_btn span::after{
-    content:""; position:absolute; left:11px; width:20px; height:2px; background:var(--base); transition:.25s;
+  .nav_toggle_btn span{ position:absolute; left:21px; top:29px; width:18px; height:2px; background:#888; transition:.25s; }
+  .nav_toggle_btn span::before,.nav_toggle_btn span::after{
+    content:""; position:absolute; left:0; width:18px; height:2px; background:#888; transition:.25s;
   }
-  .nav_toggle_btn span{ top:18px; }
   .nav_toggle_btn span::before{ top:-6px; } .nav_toggle_btn span::after{ top:6px; }
-  .global_menu{ display:block; }
-  .global_menu > ul{ display:none; flex-direction:column; height:auto; text-align:left; }
+  #nav_toggle:checked ~ .nav_toggle_btn{ background:#333; }
+  #nav_toggle:checked ~ .nav_toggle_btn span,
+  #nav_toggle:checked ~ .nav_toggle_btn span::before,
+  #nav_toggle:checked ~ .nav_toggle_btn span::after{ background:#fff; }
+
+  /* グローバルメニュー（本物 #global_menu: 黒帯・高さ50px・下層は濃色+左インデント） */
+  .global_menu{ display:block; font-weight:normal; }
+  .global_menu > ul{
+    display:none; flex-direction:column; height:auto; text-align:left;
+    position:absolute; top:60px; left:0; width:100%; z-index:30;
+    box-shadow:1px 2px 1.5px rgba(0,0,0,.1);
+  }
   #nav_toggle:checked ~ .global_menu > ul{ display:flex; }
-  #nav_toggle:checked ~ .nav_toggle_btn span{ background:transparent; }
-  #nav_toggle:checked ~ .nav_toggle_btn span::before{ top:0; transform:rotate(45deg); }
-  #nav_toggle:checked ~ .nav_toggle_btn span::after{ top:0; transform:rotate(-45deg); }
-  .global_menu > ul > li{ border-left:none; border-top:1px solid var(--beige-line); }
-  .global_menu > ul > li > a{ height:auto; line-height:1; padding:16px 20px; }
+  .global_menu > ul > li{ border:none; }
+  .global_menu > ul > li > a{ height:50px; line-height:50px; padding:0 15px; font-size:13px; font-weight:normal; color:#fff; background:#333; }
+  .global_menu > ul > li > a:hover{ color:#fff; background:#333; }
   .global_menu ul ul{ position:static; width:100%; display:block; box-shadow:none; }
-  .global_menu ul ul a{ background:#f6f4ef; color:var(--base); padding:12px 36px; }
+  .global_menu ul ul a{ background:#222; color:#fff; padding:0 15px 0 28px; height:50px; line-height:50px; font-size:13px; }
   .global_menu ul ul a:hover{ background:var(--accent); color:#fff; }
 
-  .index_band .band_inner{ flex-direction:column; gap:24px; text-align:left; width:auto; max-width:100%; padding:50px 20px; }
-  .index_band.reverse .band_inner{ flex-direction:column; }
-  .index_band .band_image img{ width:100%; height:auto; max-width:580px; }
-  .section_menu{ width:auto; max-width:100%; padding:60px 20px; }
-  .product_grid{ margin-right:0; justify-content:center; }
-  .ft_row,.ft_row.reverse{ flex-direction:column; gap:24px; }
-  #archive_post_list li{ flex-direction:column; }
+  /* --- メインビジュアル: PC用スライダーを隠しスマホ用(sp_mainvisual)を表示 --- */
+  #top_slider{ display:none; }
+  #sp_slider{ display:block; }
+
+  /* --- ベージュ帯 (本物 #index_content1/2: padding25/30px 15px・画像幅90%) --- */
+  .index_band .band_inner{ display:flex; flex-direction:column; align-items:stretch; gap:0; text-align:left; width:auto; max-width:100%; padding:25px 15px; }
+  .index_band .headline{ font-size:18px; line-height:1.6; margin:0 0 10px; }
+  .index_band .desc{ font-size:14px; line-height:2; margin:0 0 12px; }
+  .index_band .band_image{ flex:none; width:90%; margin:10px auto 0; }
+  .index_band .band_image img{ width:100%; height:auto; max-width:none; }
+  .index_band.reverse .band_inner{ flex-direction:column-reverse; padding:30px 15px; }
+  .index_band.reverse .band_image{ margin:0 auto 30px; }
+  .index_band .link_button{ display:block; width:max-content; max-width:100%; height:auto; line-height:1.7; padding:14px 24px; margin:10px auto 0; text-align:center; white-space:normal; }
+
+  /* --- 商品一覧 (本物 #index_menu: 2カラム・枠10px・タイトル非表示) --- */
+  .section_menu{ width:auto; max-width:100%; padding:40px 15px 30px; }
+  .menu_head{ margin:0 0 40px; gap:10px; }
+  .menu_head .headline{ font-size:18px; line-height:1.6; flex:1 1 auto; }
+  .menu_head .desc{ font-size:14px; line-height:2; flex:1 1 auto; }
+  .product_grid{ gap:0; margin-right:0; justify-content:flex-start; }
+  .product_grid .product{ width:calc(50% - 8px); height:auto; aspect-ratio:1/1; border:10px solid var(--beige); margin:0 15px 15px 0; }
+  .product_grid .product:nth-child(even){ margin-right:0; }
+  .product_grid .product .title{ display:none; }
+  .archive_button{ margin-top:15px; }
+
+  /* --- メニューアーカイブ (本物: サムネ120px左・タイトル16px・説明12px表示) --- */
+  #menu_archive{ padding:40px 15px; }
+  .menu_intro{ margin:0 0 30px; }
+  .menu_intro .headline{ font-size:18px; line-height:1.6; }
+  .menu_intro .desc{ font-size:12px; line-height:2; }
+  .menu_category{ margin:0 0 40px; }
+  .menu_category .cat_head{ font-size:21px; margin:0 0 25px; }
+  .menu_items{ display:block; }
+  .menu_item{ margin:0 0 20px; overflow:hidden; }
+  .menu_item .thumb{ float:left; width:120px; height:120px; aspect-ratio:auto; border:7px solid var(--beige); margin:0 15px 0 0; }
+  .menu_item .title{ font-size:16px; margin:0 0 10px; }
+  .menu_item .excerpt{ display:block; font-size:12px; line-height:2; margin:0; }
+
+  /* --- HOMEお知らせ (本物 #index_news_blog: サムネ100px左・日付12px・題14px) --- */
+  .section_topics{ width:auto; max-width:100%; padding:30px 15px 40px; }
+  .section_topics .headline{ font-size:24px; font-weight:bold; margin:0 0 10px; }
+  .news_list li{ overflow:hidden; }
+  .news_thumb{ display:block; float:left; width:100px; height:100px; margin:0 15px 0 0; overflow:hidden; }
+  .news_thumb img{ width:100%; height:100%; object-fit:cover; }
+  .news_list .date{ display:block; font-size:12px; line-height:2; margin:0; }
+  .news_list .title{ font-size:14px; font-weight:bold; line-height:2; }
+
+  /* --- TOPICSアーカイブ --- */
+  .archive_headline{ font-size:18px; line-height:1.6; }
+  #archive_post_list li{ flex-direction:column; padding:0 0 30px; margin:0 0 20px; }
   #archive_post_list .image{ flex:0 0 auto; width:100%; height:auto; max-width:355px; }
   #archive_post_list .image img{ width:100%; height:auto; }
+  #archive_post_list .title{ font-size:14px; font-weight:bold; }
+  #archive_post_list .excerpt{ font-size:12px; line-height:2; }
 
-  /* --- モバイル時の文字サイズ（本物 sweety_tcd029/mobile/style-mobile2.css 準拠） --- */
-  .index_band .headline{ font-size:18px; line-height:1.6; }              /* 本物 #index_content1/2 .headline: 18px */
-  .menu_head .headline{ font-size:18px; line-height:1.6; }               /* 本物 #index_menu .headline: 18px */
-  .menu_intro .headline{ font-size:18px; line-height:1.6; }              /* 本物 #menu_archive .headline: 18px */
-  .menu_intro .desc{ font-size:12px; line-height:2; }                    /* 本物 #menu_archive .desc: 12px */
-  .menu_category .cat_head{ font-size:21px; }                            /* 本物 #menu_archive .headline2: 21px */
-  .menu_item .title{ font-size:16px; }                                   /* 本物 #menu_archive ol li a.title: 16px */
-  .section_topics .headline{ font-size:24px; }                           /* 本物 #index_news_blog .headline: 24px */
+  /* --- Instagram (本物モバイルは3カラム) --- */
+  .section_insta{ width:auto; max-width:100%; padding:30px 15px 40px; }
   .section_insta .headline{ font-size:24px; }
-  .news_list .date{ font-size:12px; }                                    /* 本物 #index_news_blog li .date: 12px */
-  .archive_headline{ font-size:18px; line-height:1.6; }                  /* 本物 .archive_headline: 18px */
-  #archive_post_list .title{ font-size:14px; font-weight:bold; }         /* 本物 #archive_post_list li .title: 14px */
-  #archive_post_list .excerpt{ font-size:12px; line-height:2; }          /* 本物 #archive_post_list li .excerpt: 12px */
-  .ft_row .headline{ font-size:18px; }                                   /* 本物 #page_template .headline: 18px */
-  #main_image3 h2{ height:130px; line-height:130px; font-size:21px; }    /* 本物 #main_image3 h2: 21px */
-  .breadcrumb{ font-size:10px; }                                         /* 本物 #bread_crumb li: 10px */
+  .insta_feed{ grid-template-columns:repeat(3,1fr); gap:4px; }
+  .insta_follow{ margin-top:20px; }
 
-  /* 長文リンクボタンの横はみ出し防止（375px幅で折り返し可能に） */
-  .link_button{ height:auto; line-height:1.7; padding:14px 24px; max-width:100%; white-space:normal; }
-
-  /* スケジュール表の横はみ出し防止 */
+  /* --- FOOD TRUCK (本物 page_template: padding40px 15px・見出し18px) --- */
+  .ft_section{ padding:40px 15px; }
+  .ft_lead{ margin:0 auto 40px; }
+  .ft_row,.ft_row.reverse{ flex-direction:column; align-items:stretch; gap:20px; margin:0 0 40px; }
+  .ft_row .headline{ font-size:18px; }
+  .ft_schedule .inner{ padding:40px 15px; }
+  .ft_schedule h2{ font-size:21px; }
   .ft_schedule th{ width:auto; white-space:normal; }
   .ft_schedule th,.ft_schedule td{ padding:10px 12px; }
-}
-@media (max-width:520px){
-  .insta_feed{ grid-template-columns:repeat(2,1fr); }
-  .product_grid{ justify-content:center; }
-  .section_menu,.section_topics,.section_insta,.ft_section{ padding-left:16px; padding-right:16px; }
+
+  /* --- ページ見出し帯・パンくず (本物 #main_image3: padding40px 15px・21px) --- */
+  #main_image3{ padding:40px 15px; }
+  #main_image3 h2{ height:auto; line-height:1.6; font-size:21px; }
+  .breadcrumb{ font-size:10px; padding:12px 0; }
+
+  /* --- CONTACT --- */
+  .contact_wrap{ padding:40px 15px 60px; }
+
+  /* --- フッター (本物: 横型ロゴ・メニューリスト非表示・コピーライト60px) --- */
+  #footer_top_inner{ padding:40px 20px; }
+  #footer_logo_image{ margin:0 0 20px; padding-top:10px; }
+  #footer_logo_image img{ width:auto; height:45px; margin:0 auto; }
+  #footer_menu_list{ display:none; }
+  #footer_bottom{ height:60px; }
+  #copyright{ line-height:60px; }
+
+  /* --- ページ上部へ戻る (本物 #return_top2: 右下60x60の角型) --- */
+  #return_top{ right:0; bottom:0; width:60px; height:60px; border-radius:0; }
 }

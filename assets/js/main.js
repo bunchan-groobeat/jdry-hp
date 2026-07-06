@@ -7,40 +7,44 @@
 (function () {
   'use strict';
 
-  /* ---------- メインスライダー ---------- */
-  function initSlider() {
-    var slider = document.getElementById('top_slider');
+  /* ---------- メインスライダー ----------
+     PC用(#top_slider)とスマホ用(#sp_slider・本物のsp_mainvisual準拠)の
+     2つのスライダーを同じ仕組みで初期化する。表示切替はCSSメディアクエリ側で行う。 */
+  function initSlider(slider) {
     if (!slider) return;
     var slides = Array.prototype.slice.call(slider.querySelectorAll('.slide'));
-    var dotsWrap = slider.querySelector('.slider_dots');
+    var dotsWrap = slider.querySelector('.slider_dots'); // スマホ用はドットなし（本物同様）
     if (slides.length === 0) return;
 
     var idx = 0;
     var timer = null;
     var INTERVAL = 5000;
 
-    // ドット生成
-    slides.forEach(function (_, i) {
-      var b = document.createElement('button');
-      b.type = 'button';
-      b.textContent = i + 1;
-      b.addEventListener('click', function () { go(i); restart(); });
-      dotsWrap.appendChild(b);
-    });
-    var dots = Array.prototype.slice.call(dotsWrap.children);
+    // ドット生成（ドット領域がある場合のみ）
+    var dots = [];
+    if (dotsWrap) {
+      slides.forEach(function (_, i) {
+        var b = document.createElement('button');
+        b.type = 'button';
+        b.textContent = i + 1;
+        b.addEventListener('click', function () { go(i); restart(); });
+        dotsWrap.appendChild(b);
+      });
+      dots = Array.prototype.slice.call(dotsWrap.children);
+    }
 
     function go(n) {
       slides[idx].classList.remove('is-active');
-      dots[idx].classList.remove('is-active');
+      if (dots[idx]) dots[idx].classList.remove('is-active');
       idx = (n + slides.length) % slides.length;
       slides[idx].classList.add('is-active');
-      dots[idx].classList.add('is-active');
+      if (dots[idx]) dots[idx].classList.add('is-active');
     }
     function next() { go(idx + 1); }
     function restart() { if (timer) clearInterval(timer); timer = setInterval(next, INTERVAL); }
 
     slides[0].classList.add('is-active');
-    dots[0].classList.add('is-active');
+    if (dots[0]) dots[0].classList.add('is-active');
     if (slides.length > 1) restart();
   }
 
@@ -284,7 +288,8 @@
   }
 
   document.addEventListener('DOMContentLoaded', function () {
-    initSlider();
+    initSlider(document.getElementById('top_slider'));
+    initSlider(document.getElementById('sp_slider'));
     initInstagram();
     initLightbox();
     initContactForm();
