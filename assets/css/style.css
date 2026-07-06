@@ -380,6 +380,9 @@ h1,h2,h3,p{ margin:0; }
 
   /* --- ベージュ帯 (本物 #index_content1/2: padding25/30px 15px・画像幅90%) --- */
   .index_band .band_inner{ display:flex; flex-direction:column; align-items:stretch; gap:0; text-align:left; width:auto; max-width:100%; padding:25px 15px; }
+  /* PC用 flex-basis:560px が縦積みでは「高さ560px」として効き、
+     文章と皿画像の間に大きな空白を生むため無効化する */
+  .index_band .band_text{ flex:none; }
   .index_band .headline{ font-size:18px; line-height:1.6; margin:0 0 10px; }
   .index_band .desc{ font-size:14px; line-height:2; margin:0 0 12px; }
   .index_band .band_image{ flex:none; width:90%; margin:10px auto 0; }
@@ -439,6 +442,7 @@ h1,h2,h3,p{ margin:0; }
   .ft_section{ padding:40px 15px; }
   .ft_lead{ margin:0 auto 40px; }
   .ft_row,.ft_row.reverse{ flex-direction:column; align-items:stretch; gap:20px; margin:0 0 40px; }
+  .ft_row .ft_text,.ft_row .ft_image{ flex:none; } /* 縦積み時にPC用flex-basisが高さとして効くのを防止 */
   .ft_row .headline{ font-size:18px; }
   .ft_schedule .inner{ padding:40px 15px; }
   .ft_schedule h2{ font-size:21px; }
