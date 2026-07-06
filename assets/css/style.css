@@ -15,7 +15,7 @@
 }
 
 *,*::before,*::after{ box-sizing:border-box; }
-html{ -webkit-text-size-adjust:100%; }
+html{ -webkit-text-size-adjust:100%; text-size-adjust:100%; }
 body{
   margin:0; color:var(--base); font-size:14px; line-height:1.6;
   font-family:Arial,"ヒラギノ角ゴ Pro W3","Hiragino Kaku Gothic Pro","メイリオ",Meiryo,sans-serif;
@@ -350,7 +350,6 @@ h1,h2,h3,p{ margin:0; }
 
   .index_band .band_inner{ flex-direction:column; gap:24px; text-align:left; width:auto; max-width:100%; padding:50px 20px; }
   .index_band.reverse .band_inner{ flex-direction:column; }
-  .index_band .headline{ font-size:22px; }
   .index_band .band_image img{ width:100%; height:auto; max-width:580px; }
   .section_menu{ width:auto; max-width:100%; padding:60px 20px; }
   .product_grid{ margin-right:0; justify-content:center; }
@@ -358,10 +357,33 @@ h1,h2,h3,p{ margin:0; }
   #archive_post_list li{ flex-direction:column; }
   #archive_post_list .image{ flex:0 0 auto; width:100%; height:auto; max-width:355px; }
   #archive_post_list .image img{ width:100%; height:auto; }
+
+  /* --- モバイル時の文字サイズ（本物 sweety_tcd029/mobile/style-mobile2.css 準拠） --- */
+  .index_band .headline{ font-size:18px; line-height:1.6; }              /* 本物 #index_content1/2 .headline: 18px */
+  .menu_head .headline{ font-size:18px; line-height:1.6; }               /* 本物 #index_menu .headline: 18px */
+  .menu_intro .headline{ font-size:18px; line-height:1.6; }              /* 本物 #menu_archive .headline: 18px */
+  .menu_intro .desc{ font-size:12px; line-height:2; }                    /* 本物 #menu_archive .desc: 12px */
+  .menu_category .cat_head{ font-size:21px; }                            /* 本物 #menu_archive .headline2: 21px */
+  .menu_item .title{ font-size:16px; }                                   /* 本物 #menu_archive ol li a.title: 16px */
+  .section_topics .headline{ font-size:24px; }                           /* 本物 #index_news_blog .headline: 24px */
+  .section_insta .headline{ font-size:24px; }
+  .news_list .date{ font-size:12px; }                                    /* 本物 #index_news_blog li .date: 12px */
+  .archive_headline{ font-size:18px; line-height:1.6; }                  /* 本物 .archive_headline: 18px */
+  #archive_post_list .title{ font-size:14px; font-weight:bold; }         /* 本物 #archive_post_list li .title: 14px */
+  #archive_post_list .excerpt{ font-size:12px; line-height:2; }          /* 本物 #archive_post_list li .excerpt: 12px */
+  .ft_row .headline{ font-size:18px; }                                   /* 本物 #page_template .headline: 18px */
+  #main_image3 h2{ height:130px; line-height:130px; font-size:21px; }    /* 本物 #main_image3 h2: 21px */
+  .breadcrumb{ font-size:10px; }                                         /* 本物 #bread_crumb li: 10px */
+
+  /* 長文リンクボタンの横はみ出し防止（375px幅で折り返し可能に） */
+  .link_button{ height:auto; line-height:1.7; padding:14px 24px; max-width:100%; white-space:normal; }
+
+  /* スケジュール表の横はみ出し防止 */
+  .ft_schedule th{ width:auto; white-space:normal; }
+  .ft_schedule th,.ft_schedule td{ padding:10px 12px; }
 }
 @media (max-width:520px){
   .insta_feed{ grid-template-columns:repeat(2,1fr); }
   .product_grid{ justify-content:center; }
-  #main_image3 h2{ height:130px; line-height:130px; font-size:20px; }
   .section_menu,.section_topics,.section_insta,.ft_section{ padding-left:16px; padding-right:16px; }
 }
