@@ -431,6 +431,70 @@
     /* 保険：監視が働かない環境でも4秒後には必ず開く */
     setTimeout(function () {
       Array.prototype.forEach.call(boxes, function (b) { b.classList.add("is-in"); });
+    }, 5000);
+  }
+
+
+  /* ---- カテゴリ見出しの文字を横からスライドさせて見せる（★2026-09-08 社長指示） ----
+     対象＝メニューページの各カテゴリ見出し（.cat_head）
+     ・画面に入ったら、文字が左から滑り込んで中央に収まる
+     ・★JSが動くと確定してから <html> に js-slide を付ける。
+       CSSで先に隠す作りにすると、JSが止まった瞬間に見出しが消えたページになる
+     ・「動きを減らす」設定の人には演出しない */
+  function initSlideIn() {
+    var heads = document.querySelectorAll(".cat_head");
+    if (!heads.length) return;
+
+    var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduce || !window.IntersectionObserver) return;
+
+    document.documentElement.classList.add("js-slide");
+
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) {
+          e.target.classList.add("is-in");
+          io.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.4 });
+
+    Array.prototype.forEach.call(heads, function (h) { io.observe(h); });
+
+    /* 保険：監視が働かない環境でも4秒後には必ず出す */
+    setTimeout(function () {
+      Array.prototype.forEach.call(heads, function (h) { h.classList.add("is-in"); });
+    }, 4000);
+  }
+
+
+  /* ---- 黒い丸バッジを弾ませて出す（★2026-09-08 社長指示） ----
+     ・画面に入ったら、小さく縮んだ状態から少し行き過ぎて戻る＝着地する動き
+     ・★js-bounce が付いたときだけ隠すので、JSが止まってもバッジは見える
+     ・「動きを減らす」設定の人には演出しない */
+  function initBadgeBounce() {
+    var rows = document.querySelectorAll(".ft_row");
+    if (!rows.length) return;
+
+    var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduce || !window.IntersectionObserver) return;
+
+    document.documentElement.classList.add("js-bounce");
+
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) {
+          e.target.classList.add("is-bounced");
+          io.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.12 });
+
+    Array.prototype.forEach.call(rows, function (r) { io.observe(r); });
+
+    /* 保険：監視が働かない環境でも4秒後には必ず出す */
+    setTimeout(function () {
+      Array.prototype.forEach.call(rows, function (r) { r.classList.add("is-bounced"); });
     }, 4000);
   }
 
@@ -444,5 +508,7 @@
     initTypewriter();
     initSpinIn();
     initMaskReveal();
+    initSlideIn();
+    initBadgeBounce();
   });
 })();

@@ -207,8 +207,28 @@ h1,h2,h3,p{ margin:0; }
   font-size:0.92rem; line-height:2.0; max-width:44em; margin:0 auto; text-align:left;
 }
 .menu_category{ margin:0 0 70px; }
-.menu_category .cat_head{ font-size:2rem; font-weight:400; line-height:1.8; margin:0 0 25px; font-family:var(--mincho); border-bottom:1px solid var(--beige-line); padding-bottom:12px; }
-.menu_category .cat_head span{ font-weight:bold; margin-right:15px; }
+/* ★2026-09-08 社長「各項目のタイトルの背景に分かるように色変えて、
+   表示の際にスライドで項目文字が入るように。中央ぞろえで」
+   カテゴリの見出しを地色つきの帯にして、どこから次のカテゴリか一目で分かるようにした。 */
+.menu_category .cat_head{
+  font-size:2rem; font-weight:400; line-height:1.6; margin:0 0 34px;
+  font-family:var(--mincho); text-align:center;
+  background:var(--beige); padding:20px 24px;
+  border-bottom:none;
+  overflow:hidden;            /* 文字が滑り込む前のはみ出しを隠す */
+}
+.menu_category .cat_head span{ display:inline-block; font-weight:bold; margin:0; }
+
+/* 文字が左から滑り込む。★js-slide が付いたときだけ隠すので、JSが止まっても見出しは見える */
+.js-slide .cat_head span{
+  opacity:0; transform:translateX(-48px);
+  transition:opacity .55s ease, transform .8s cubic-bezier(.2,.8,.25,1);
+}
+.js-slide .cat_head.is-in span{ opacity:1; transform:translateX(0); }
+
+@media (prefers-reduced-motion: reduce){
+  .js-slide .cat_head span{ opacity:1; transform:none; transition:none; }
+}
 /* ★2026-09-08 社長「メニューの画像もう少し小さく画像画像の間もう少し空けて」
    ・1枚あたりの上限を決めて小さくし（列幅いっぱいに広がらないようにする）
    ・そのぶん写真どうしの間隔が空く。行間も広げた */
@@ -324,24 +344,38 @@ h1,h2,h3,p{ margin:0; }
    項目の左上端に張り付いているように」
    年号と車名を黒い円のバッジにまとめ、ブロックの左上角に貼り付ける。 */
 .ft_head .ft_title{
-  position:absolute; top:0; left:0; z-index:2;
-  width:148px; height:148px; border-radius:50%;
+  position:absolute; top:-22px; left:-22px; z-index:2;
+  width:208px; height:208px; border-radius:50%;
   background:#000; color:#fff;
   display:flex; flex-direction:column; align-items:center; justify-content:center;
-  text-align:center; padding:10px;
+  text-align:center; padding:14px;
+  box-shadow:0 10px 28px rgba(0,0,0,.22);   /* 上に載っている感じを出す */
+}
+
+/* ★2026-09-08 社長「もっと大きく存在感出して、バウンスインして」
+   小さく縮んだ状態から、少し行き過ぎてから戻る＝弾んで着地する動き。
+   ★js-bounce が付いたときだけ隠すので、JSが止まってもバッジは見える。 */
+.js-bounce .ft_head .ft_title{
+  opacity:0; transform:scale(.3);
+  transition:opacity .32s ease, transform .72s cubic-bezier(.3,1.7,.4,1);
+}
+.js-bounce .ft_row.is-bounced .ft_title{ opacity:1; transform:scale(1); }
+
+@media (prefers-reduced-motion: reduce){
+  .js-bounce .ft_head .ft_title{ opacity:1; transform:none; transition:none; }
 }
 .ft_row .ft_year{
-  display:inline-block; font-size:0.78rem; font-weight:bold; letter-spacing:.06em;
+  display:inline-block; font-size:0.95rem; font-weight:bold; letter-spacing:.06em;
   color:#fff; margin:0 0 8px; padding:0 0 6px;
   border-bottom:2px solid var(--accent);   /* 線は今のまま（アクセント色） */
 }
 .ft_row .headline{
-  font-size:1.28rem; font-weight:bold; line-height:1.3; margin:0;
+  font-size:1.72rem; font-weight:bold; line-height:1.3; margin:0;
   font-family:var(--mincho); color:#fff; white-space:nowrap;
 }
 
 /* バッジが左上に載るので、説明文はそのぶん右へ寄せる */
-.ft_head{ display:block; margin:0 0 32px; padding-left:120px; min-height:96px; }
+.ft_head{ display:block; margin:0 0 32px; padding-left:180px; min-height:150px; }
 .ft_head .desc{ margin:0; }
 
 /* 写真：横に並べて幅いっぱいに使う。高さを揃えて帯のように見せる */
@@ -727,13 +761,15 @@ h1,h2,h3,p{ margin:0; }
   /* 中心の点から始めて、四隅を覆う大きさまで円を広げる
      （四隅に届くのは対角線の半分＝約71%。少し余裕をみて78%まで開く） */
   clip-path:circle(0% at 50% 50%);
-  transition:clip-path 1.25s cubic-bezier(.22,.75,.25,1);
+  /* ★2026-09-08 社長「もっとゆっくり分かりやすく」＝1.25秒 → 2.4秒。
+     速度曲線もゆるやかにして、円が広がる過程が目で追えるようにした */
+  transition:clip-path 2.4s cubic-bezier(.25,.6,.3,1);
   /* ★will-change は付けない。写真6枚ぶんをGPUに常時確保することになり、
      実測でブラウザの描画が固まった（スクリーンショットが30秒でタイムアウト）。 */
 }
 .js-mask .ft_image.is-in img{ clip-path:circle(78% at 50% 50%); }
 /* 横に2枚並ぶブロックは、2枚目を少し遅らせて順に開く */
-.js-mask .ft_image--2.is-in img:nth-child(2){ transition-delay:.3s; }
+.js-mask .ft_image--2.is-in img:nth-child(2){ transition-delay:.7s; }
 
 /* 主役として大きく見せる（写真を1台ぶんの顔にする） */
 .ft_image--2 img{ aspect-ratio:3/2; }
