@@ -10,7 +10,10 @@
   --base:#333333;
   --beige:#e6e3dc;
   --beige-line:#ddd;
-  --container:1160px;
+  /* ★2026-09-08 社長「もっと幅を使い文字大きく」。
+     1160px 固定だと 3840px の画面で 2680px が余っていた（実測）。
+     小さい画面では今までどおり、大きい画面ほど広く使う。 */
+  --container: min(2400px, 93vw);
   --mincho: Garamond,"Times New Roman","游明朝","Yu Mincho","游明朝体","YuMincho","ヒラギノ明朝 Pro W3","Hiragino Mincho Pro","HGS明朝E","ＭＳ Ｐ明朝","MS PMincho",serif;
 }
 
@@ -21,7 +24,7 @@ html{
      ・本文の基準を 14px → 16px 相当へ引き上げた（Webの本文は16px以上が読みやすさの下限）
      ・画面幅に追従させるので、4Kの大画面では最大20pxまで伸び、スマホでは16pxに収まる
      ・以下の font-size はすべて rem（この基準の倍数）にしてあるので、ここ1行で全体が動く */
-  font-size: clamp(16px, 0.15vw + 15.2px, 19px);
+  font-size: clamp(16px, 0.32vw + 15px, 28px);
 }
 body{
   margin:0; color:var(--base); font-size:1rem; line-height:1.75;
