@@ -153,7 +153,8 @@ h1,h2,h3,p{ margin:0; }
 ========================================================= */
 .section_menu{ width:var(--container); margin:0 auto; padding:80px 0; }
 .menu_head{ display:flex; flex-wrap:wrap; align-items:flex-start; margin:0 0 50px; gap:20px; }
-.menu_head .headline{ flex:1 1 500px; font-size:2rem; line-height:1.8; font-weight:bold; font-family:var(--mincho); }
+/* ★2026-09-08 社長「FOOD/DRINK 中央ぞろえ」。下のカテゴリ枠が中央揃えなので見出しも合わせる */
+.menu_head .headline{ flex:1 1 100%; font-size:2rem; line-height:1.8; font-weight:bold; font-family:var(--mincho); text-align:center; }
 .menu_head .desc{ flex:1 1 500px; font-size:1rem; line-height:2.2; }
 
 /* 本物準拠: 4列・タイル外形266px（画像240px＋13pxベージュ枠）・横33px/縦30px間隔。
