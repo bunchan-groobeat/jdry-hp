@@ -287,6 +287,69 @@
     });
   }
 
+
+  /* ---- 見出しを1文字ずつ打ち込む演出（★2026-09-08 社長指示） ----
+     対象＝トップの「独自の低温乾燥技術により…「国産原料のドライフルーツ」」
+     ・水野谷HPで実装済みの型を移植（1文字ずつ span 化して順に表示）
+     ・★JSが動くと確定してから <html> に js-tw を付ける。先にCSSで隠す作りにすると、
+       JSが止まった瞬間に見出しが消えたページになる（事故る）
+     ・スクロールして画面に入ってから打ち始める（トップの帯は少し下にあるため）
+     ・「動きを減らす」設定の人には演出しない */
+  function initTypewriter() {
+    var el = document.querySelector(".index_band .headline.typewriter");
+    if (!el) return;
+
+    var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduce || !window.requestAnimationFrame) return;
+
+    document.documentElement.classList.add("js-tw");
+
+    var frag = document.createDocumentFragment();
+    var chars = [];
+    Array.prototype.forEach.call(el.childNodes, function (node) {
+      if (node.nodeType === 3) {
+        node.textContent.split("").forEach(function (ch) {
+          var s = document.createElement("span");
+          s.className = "tw-char";
+          s.textContent = ch;
+          chars.push(s);
+          frag.appendChild(s);
+        });
+      } else {
+        frag.appendChild(node.cloneNode(true));
+      }
+    });
+    el.textContent = "";
+    el.appendChild(frag);
+    el.classList.add("is-typing");
+
+    /* 1文字あたりの間隔。文字数が多い見出しなので水野谷(165ms)より速くする。
+       約60文字 × 55ms ≒ 3.3秒。読みながら追える速さ。 */
+    var STEP = 55;
+    var START_DELAY = 250;
+    var started = false;
+
+    function run() {
+      if (started) return;
+      started = true;
+      chars.forEach(function (s, i) {
+        setTimeout(function () { s.classList.add("is-on"); }, START_DELAY + i * STEP);
+      });
+    }
+
+    /* 画面に入ったら打ち始める。監視APIが無い環境では即座に打つ */
+    if (window.IntersectionObserver) {
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) { if (e.isIntersecting) { run(); io.disconnect(); } });
+      }, { threshold: 0.35 });
+      io.observe(el);
+      /* 保険：監視が働かない環境でも4秒後には必ず出す */
+      setTimeout(run, 4000);
+    } else {
+      run();
+    }
+  }
+
   document.addEventListener('DOMContentLoaded', function () {
     initSlider(document.getElementById('top_slider'));
     initSlider(document.getElementById('sp_slider'));
@@ -294,5 +357,6 @@
     initLightbox();
     initContactForm();
     initReturnTop();
+    initTypewriter();
   });
 })();
