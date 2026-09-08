@@ -635,3 +635,45 @@ h1,h2,h3,p{ margin:0; }
   .spin-in{ animation:none; }
   .js-spin .spin-box{ opacity:1; transform:none; transition:none; }
 }
+/* =========================================================
+   商品写真を少しだけ傾ける（★2026-09-08 社長指示「rotate 少し傾く（2〜5度）」）
+   ・角度は 2〜4.5度の範囲で、隣どうし同じにならないよう5枚周期でずらす
+     （全部同じ角度だと「傾け忘れ」に見え、均一に並ぶ気持ち悪さも消えない）
+   ・触れた（ホバーした）ときだけ正位置に戻る＝手に取って見る感じ
+   ・傾けると角が隣にはみ出すので、gap の内側に収まる角度に留めている
+========================================================= */
+.menu_item .thumb,
+.cat_photo{
+  transition:transform .35s cubic-bezier(.2,.8,.3,1);
+  will-change:transform;
+}
+
+/* メニューページの商品写真（23枚） */
+.menu_item:nth-child(5n+1) .thumb{ transform:rotate(-3deg); }
+.menu_item:nth-child(5n+2) .thumb{ transform:rotate(2.2deg); }
+.menu_item:nth-child(5n+3) .thumb{ transform:rotate(-2deg); }
+.menu_item:nth-child(5n+4) .thumb{ transform:rotate(4deg); }
+.menu_item:nth-child(5n+5) .thumb{ transform:rotate(-4.5deg); }
+.menu_item .thumb:hover{ transform:rotate(0deg) scale(1.02); }
+
+/* トップの FOOD/DRINK カテゴリ写真（6枠） */
+.cat_card:nth-child(5n+1) .cat_photo{ transform:rotate(-2.5deg); }
+.cat_card:nth-child(5n+2) .cat_photo{ transform:rotate(3deg); }
+.cat_card:nth-child(5n+3) .cat_photo{ transform:rotate(-4deg); }
+.cat_card:nth-child(5n+4) .cat_photo{ transform:rotate(2deg); }
+.cat_card:nth-child(5n+5) .cat_photo{ transform:rotate(-3.5deg); }
+.cat_card:hover .cat_photo{ transform:rotate(0deg); }
+
+/* スマホは写真が小さく、傾けると文字と干渉するので浅くする */
+@media (max-width:820px){
+  .menu_item .thumb,
+  .cat_photo{ transform:rotate(-1.5deg) !important; }
+  .menu_item .thumb:hover,
+  .cat_card:hover .cat_photo{ transform:rotate(0deg) !important; }
+}
+
+/* 動きを減らす設定の方には傾けない */
+@media (prefers-reduced-motion: reduce){
+  .menu_item .thumb,
+  .cat_photo{ transform:none !important; transition:none; }
+}
