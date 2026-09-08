@@ -217,7 +217,8 @@ h1,h2,h3,p{ margin:0; }
 .menu_category .cat_head{
   font-size:2rem; font-weight:400; line-height:1.6; margin:0 0 34px;
   font-family:var(--mincho); text-align:center;
-  background:var(--beige); padding:20px 24px;
+  /* ★2026-09-08 社長「もっと目立たなく薄い感じに」＝#e6e3dc → #f7f5f1 */
+  background:#f7f5f1; padding:20px 24px;
   border-bottom:none;
   overflow:hidden;            /* 文字が滑り込む前のはみ出しを隠す */
 }
@@ -234,8 +235,9 @@ h1,h2,h3,p{ margin:0; }
 
 /* 文字が左から滑り込む。★js-slide が付いたときだけ隠すので、JSが止まっても見出しは見える */
 .js-slide .cat_head span{
-  opacity:0; transform:translateX(-48px);
-  transition:opacity .55s ease, transform .8s cubic-bezier(.2,.8,.25,1);
+  opacity:0; transform:translateX(-56px);
+  /* ★2026-09-08 社長「スライドで入る文字アクションゆっくりに」＝0.8秒 → 1.6秒 */
+  transition:opacity 1.1s ease, transform 1.6s cubic-bezier(.22,.7,.25,1);
 }
 .js-slide .cat_head.is-in span{ opacity:1; transform:translateX(0); }
 
