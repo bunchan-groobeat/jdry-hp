@@ -128,8 +128,12 @@ h1,h2,h3,p{ margin:0; }
 /* 本物準拠: セクション幅1160px固定・左右余白0・皿画像580px（テキスト560px）。
    本物は非レスポンシブで1160px未満は横スクロール。820px以下で縦積みに切替。 */
 .index_band .band_inner{ display:flex; align-items:center; gap:20px; padding:50px 0; width:var(--container); margin:0 auto; }
-.index_band .band_text{ flex:1 1 560px; }
-.index_band .band_image{ flex:0 0 auto; }
+/* ★2026-09-08 社長「画像が空きスペースに対して真ん中じゃない」。
+   画像の箱が「画像の幅ぴったり（flex:0 0 auto）」だったため、左右の領域が 1186px 対 580px と偏り、
+   画像だけが端に張り付いて見えていた（画像そのものは箱の中央にあり、CSS上のズレは0だった）。
+   → 左右を半々にして、画像はその領域の中央に置く。 */
+.index_band .band_text{ flex:1 1 50%; min-width:0; }
+.index_band .band_image{ flex:1 1 50%; min-width:0; display:flex; justify-content:center; align-items:center; }
 /* ★2026-09-08 社長「もう少し小さく中央寄せで見やすく」。42px→34px相当・中央揃え・行間を詰めた */
 .index_band .headline{ font-size:1.6rem; line-height:1.6; font-weight:bold; margin:0 0 18px; font-family:var(--mincho); text-align:center; }
 /* ★2026-09-08 社長「タイトルと文章のサイズ考え見やすく」。
