@@ -1,0 +1,53 @@
+# J-DRY 入れ替え用 301リダイレクト — 2026-09-09 太郎
+# 置き場所: j-dry.com のドキュメントルート直下 .htaccess
+# 旧URL一覧は 2026-09-09 に j-dry.com/wp-sitemap.xml を実測して作成（旧37URL）。
+# ★3サイトでここだけ「37URL → 5URL」の統合。個別ページの評価は引き継がれにくいので、
+#   せめてカテゴリ単位でアンカーへ落として関連性を残す。
+# ★アンカー先は menu.html に実在することを確認済み（id= dryfruit / drink / herbtea / granola / other / syrup）。
+#   ★旧スラッグ dryfruitsyrup に対応する新idは syrup（名前が違う。取り違え注意）
+
+<IfModule mod_rewrite.c>
+RewriteEngine On
+
+# --- 1) メニューのカテゴリ（sitemapに載っている形）---
+RewriteRule ^archives/menu/menu_category/dryfruit/?$      /menu.html#dryfruit  [R=301,L]
+RewriteRule ^archives/menu/menu_category/drink/?$         /menu.html#drink     [R=301,L]
+RewriteRule ^archives/menu/menu_category/herbtea/?$       /menu.html#herbtea   [R=301,L]
+RewriteRule ^archives/menu/menu_category/granola/?$       /menu.html#granola   [R=301,L]
+RewriteRule ^archives/menu/menu_category/dryfruitsyrup/?$ /menu.html#syrup     [R=301,L]
+RewriteRule ^archives/menu/menu_category/other/?$         /menu.html#other     [R=301,L]
+
+# --- 2) メニューのカテゴリ（トップページのリンクで使われている短い形）---
+RewriteRule ^archives/menu_category/dryfruit/?$      /menu.html#dryfruit  [R=301,L]
+RewriteRule ^archives/menu_category/drink/?$         /menu.html#drink     [R=301,L]
+RewriteRule ^archives/menu_category/herbtea/?$       /menu.html#herbtea   [R=301,L]
+RewriteRule ^archives/menu_category/granola/?$       /menu.html#granola   [R=301,L]
+RewriteRule ^archives/menu_category/dryfruitsyrup/?$ /menu.html#syrup     [R=301,L]
+RewriteRule ^archives/menu_category/other/?$         /menu.html#other     [R=301,L]
+
+# --- 3) メニュー個別25本 → カテゴリのアンカーへ ---
+RewriteRule ^archives/menu/dryfruit/[0-9]+/?$      /menu.html#dryfruit  [R=301,L]
+RewriteRule ^archives/menu/drink/[0-9]+/?$         /menu.html#drink     [R=301,L]
+RewriteRule ^archives/menu/herbtea/[0-9]+/?$       /menu.html#herbtea   [R=301,L]
+RewriteRule ^archives/menu/granola/[0-9]+/?$       /menu.html#granola   [R=301,L]
+RewriteRule ^archives/menu/dryfruitsyrup/[0-9]+/?$ /menu.html#syrup     [R=301,L]
+RewriteRule ^archives/menu/other/[0-9]+/?$         /menu.html#other     [R=301,L]
+
+# --- 4) メニュー一覧 ---
+RewriteRule ^archives/menu/?$                      /menu.html           [R=301,L]
+
+# --- 5) お知らせ・ブログ → topics ---
+RewriteRule ^archives/news/[0-9]+/?$               /topics.html         [R=301,L]
+RewriteRule ^archives/news/?$                      /topics.html         [R=301,L]
+RewriteRule ^archives/category/blog/?$             /topics.html         [R=301,L]
+RewriteRule ^archives/[0-9]+/?$                    /topics.html         [R=301,L]
+
+# --- 6) 固定ページ（拡張子が付くだけ）---
+RewriteRule ^contact/?$                            /contact.html        [R=301,L]
+RewriteRule ^food-truck/?$                         /food-truck.html     [R=301,L]
+
+# --- 7) WordPressの残骸 ---
+RewriteRule ^feed/?$          /  [R=301,L]
+RewriteRule ^wp-content/      /  [R=301,L]
+RewriteRule ^wp-includes/     /  [R=301,L]
+</IfModule>
