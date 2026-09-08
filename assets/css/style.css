@@ -209,12 +209,13 @@ h1,h2,h3,p{ margin:0; }
        ＝縦横きれいに整列すると「壁紙」に見えて硬くなるため
      ・どちらも fixed なので、スクロールしても柄はその場に留まる */
   background:
-    url("../img/logo-mark-tile.png") 0 0 / 260px 260px repeat fixed,
-    url("../img/logo-mark-tile.png") 130px 130px / 260px 260px repeat fixed;
+    /* ★2026-09-08 社長「多すぎる。もっと間隔あけて」＝1マス 260px → 520px（枚数は約1/4） */
+    url("../img/logo-mark-tile.png") 0 0 / 520px 520px repeat fixed,
+    url("../img/logo-mark-tile.png") 260px 260px / 520px 520px repeat fixed;
 }
 /* スマホは画面が狭いので、文字に重なりすぎないよう少し小さくする */
 @media (max-width:820px){
-  #menu_archive{ background-size:150px 150px, 150px 150px; background-position:0 0, 75px 75px; }
+  #menu_archive{ background-size:300px 300px, 300px 300px; background-position:0 0, 150px 150px; }
 }
 /* 導入文（★2026-09-08 社長「タイトルを上に小さい文字の説明を下に背景の色変えて」）
    元は見出しが左・説明が右の2カラムで、どちらが主役か分からなかった。
