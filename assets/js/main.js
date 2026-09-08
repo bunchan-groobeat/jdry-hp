@@ -390,6 +390,50 @@
     }, 4000);
   }
 
+
+  /* ---- 写真を円のマスクで開いて見せる（★2026-09-08 社長指示） ----
+     対象＝FOOD TRUCK の写真（.ft_image）
+     ・画面に入ったら、中心から円が広がって写真が現れる
+     ・横に2枚並ぶブロックでは2枚目を少し遅らせて、順に開くようにしている（CSS側）
+     ・★JSが動くと確定してから <html> に js-mask を付ける。
+       CSSで先に隠す作りにすると、JSが止まった瞬間に写真が消えたページになる
+     ・「動きを減らす」設定の人には演出しない */
+  function initMaskReveal() {
+    var boxes = document.querySelectorAll(".ft_image");
+    if (!boxes.length) return;
+
+    var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduce || !window.IntersectionObserver) return;
+
+    document.documentElement.classList.add("js-mask");
+
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) {
+          e.target.classList.add("is-in");
+          io.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.15 });
+
+    Array.prototype.forEach.call(boxes, function (b) { io.observe(b); });
+
+    /* ★開き終わったら clip-path を外す。
+       円のマスクを掛けたままにすると描画の合成が走り続け、実測でブラウザが固まった
+       （スクリーンショットが30秒でタイムアウト）。開ききった円は四隅を覆うので、
+       外しても見た目は変わらない。 */
+    Array.prototype.forEach.call(document.querySelectorAll(".ft_image img"), function (img) {
+      img.addEventListener("transitionend", function (e) {
+        if (e.propertyName === "clip-path") { img.style.clipPath = "none"; }
+      });
+    });
+
+    /* 保険：監視が働かない環境でも4秒後には必ず開く */
+    setTimeout(function () {
+      Array.prototype.forEach.call(boxes, function (b) { b.classList.add("is-in"); });
+    }, 4000);
+  }
+
   document.addEventListener('DOMContentLoaded', function () {
     initSlider(document.getElementById('top_slider'));
     initSlider(document.getElementById('sp_slider'));
@@ -399,5 +443,6 @@
     initReturnTop();
     initTypewriter();
     initSpinIn();
+    initMaskReveal();
   });
 })();
