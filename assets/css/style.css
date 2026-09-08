@@ -213,13 +213,15 @@ h1,h2,h3,p{ margin:0; }
        ・原因＝background-size でタイルを引き伸ばしていたため、マーク自体が巨大化して隣と接触していた
        ・対処＝マークの周りに余白を持たせた画像（440x440 の中央に132pxのマーク）を用意し、
          background-size をその原寸（440px）にした。マークは実寸で描かれ、余白が間隔になる
-       ・マーク同士の最短距離＝308px（同じ列・行）／179px（斜め隣） */
-    url("../img/logo-mark-tile.png") 0 0 / 440px 440px repeat fixed,
-    url("../img/logo-mark-tile.png") 220px 220px / 440px 440px repeat fixed;
+       ・★2026-09-08 社長「もう少しだけ数増やして」＝1マス 440px → 370px（枚数1.41倍）。
+         マークの大きさ（132px）は据え置き、余白だけ詰めた
+       ・マーク同士の最短距離＝238px（同じ列・行）／130px（斜め隣） */
+    url("../img/logo-mark-tile.png") 0 0 / 370px 370px repeat fixed,
+    url("../img/logo-mark-tile.png") 185px 185px / 370px 370px repeat fixed;
 }
 /* スマホは画面が狭いので、文字に重なりすぎないよう少し小さくする */
 @media (max-width:820px){
-  #menu_archive{ background-size:300px 300px, 300px 300px; background-position:0 0, 150px 150px; }  /* スマホは原寸より縮めるのでマークも小さくなる＝重ならない */
+  #menu_archive{ background-size:240px 240px, 240px 240px; background-position:0 0, 120px 120px; }  /* スマホは原寸より縮めるのでマークも小さくなる＝重ならない */
 }
 /* 導入文（★2026-09-08 社長「タイトルを上に小さい文字の説明を下に背景の色変えて」）
    元は見出しが左・説明が右の2カラムで、どちらが主役か分からなかった。
