@@ -132,7 +132,20 @@ h1,h2,h3,p{ margin:0; }
 .index_band .band_image{ flex:0 0 auto; }
 /* ★2026-09-08 社長「もう少し小さく中央寄せで見やすく」。42px→34px相当・中央揃え・行間を詰めた */
 .index_band .headline{ font-size:1.6rem; line-height:1.6; font-weight:bold; margin:0 0 18px; font-family:var(--mincho); text-align:center; }
-.index_band .desc{ font-size:1rem; line-height:2.2; margin:0 0 30px; }
+/* ★2026-09-08 社長「タイトルと文章のサイズ考え見やすく」。
+   見出し34px に対して本文21px は近すぎて、長文が塊に見えていた。
+   ・本文を1段落ぶん小さくして、見出しとの差をはっきりさせる
+   ・1行が長いと目が戻れなくなるので 36em で折り返す（＝約36文字）
+   ・段落ごとに間を空ける。<br>での改行はやめた（文字サイズが変わると変な位置で切れるため） */
+.index_band .desc{
+  font-size:0.92rem; line-height:2.0; margin:0 auto 22px;
+  max-width:36em;
+}
+.index_band .desc:last-of-type{ margin-bottom:30px; }
+/* 見出し直下の一文だけは、見出しと同じ中央揃えにして受けを作る */
+.index_band .desc.lead{
+  font-size:1.02rem; line-height:1.9; text-align:center; margin-bottom:26px;
+}
 .index_band.reverse .band_inner{ flex-direction:row-reverse; }
 
 /* =========================================================
@@ -570,7 +583,17 @@ h1,h2,h3,p{ margin:0; }
 }
 .headline.is-typing .tw-char.is-on{ opacity:1; transform:translateY(0); }
 
+/* 見出しを打ち終わるまでリード文は出さない。
+   ★セレクタを .js-tw から始めているのが要点＝JSが「これから演出する」と決めたときだけ隠す。
+     CSSだけで先に隠すと、JSが止まった瞬間に本文が見えないページになる。 */
+.js-tw .index_band .band_text .desc.lead{
+  opacity:0; transform:translateY(6px);
+  transition:opacity .5s ease, transform .5s ease;
+}
+.js-tw .index_band .band_text.is-typed .desc.lead{ opacity:1; transform:none; }
+
 /* 動きを減らす設定の方には演出しない（JS側でも判定しているが二重に保証する） */
 @media (prefers-reduced-motion: reduce){
   .headline.is-typing .tw-char{ opacity:1; transform:none; transition:none; }
+  .js-tw .index_band .band_text .desc.lead{ opacity:1; transform:none; transition:none; }
 }

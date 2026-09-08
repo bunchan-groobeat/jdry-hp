@@ -329,12 +329,19 @@
     var START_DELAY = 250;
     var started = false;
 
+    /* 見出しを打ち終わってからリード文を出す。
+       先に見えていると「打っている途中なのに続きがある」不自然さが出る。 */
+    var band = el.closest(".band_text");
+
     function run() {
       if (started) return;
       started = true;
       chars.forEach(function (s, i) {
         setTimeout(function () { s.classList.add("is-on"); }, START_DELAY + i * STEP);
       });
+      setTimeout(function () {
+        if (band) band.classList.add("is-typed");
+      }, START_DELAY + chars.length * STEP + 100);
     }
 
     /* 画面に入ったら打ち始める。監視APIが無い環境では即座に打つ */
