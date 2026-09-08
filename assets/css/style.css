@@ -191,10 +191,21 @@ h1,h2,h3,p{ margin:0; }
    メニューアーカイブ（カテゴリー別・説明付き）
 ========================================================= */
 #menu_archive{ width:var(--container); max-width:100%; margin:0 auto; padding:20px 20px 60px; }
-/* 導入文（見出し左・説明右） */
-.menu_intro{ display:flex; flex-wrap:wrap; gap:10px 40px; margin:0 0 60px; }
-.menu_intro .headline{ flex:1 1 500px; font-size:2rem; font-weight:bold; line-height:1.8; font-family:var(--mincho); }
-.menu_intro .desc{ flex:1 1 500px; font-size:1rem; line-height:2.2; }
+/* 導入文（★2026-09-08 社長「タイトルを上に小さい文字の説明を下に背景の色変えて」）
+   元は見出しが左・説明が右の2カラムで、どちらが主役か分からなかった。
+   タイトルを上に大きく、説明を下に小さく置き、地の色を敷いて1つの塊にした。 */
+.menu_intro{
+  display:block; background:#f4f1ea;
+  padding:56px 48px; margin:0 0 70px; text-align:center;
+}
+.menu_intro .headline{
+  font-size:1.6rem; font-weight:bold; line-height:1.6; margin:0 0 24px;
+  font-family:var(--mincho);
+}
+/* 説明は長文なので、中央に置いた箱の中で左揃えにする（中央揃えは読みにくい） */
+.menu_intro .desc{
+  font-size:0.92rem; line-height:2.0; max-width:44em; margin:0 auto; text-align:left;
+}
 .menu_category{ margin:0 0 70px; }
 .menu_category .cat_head{ font-size:2rem; font-weight:400; line-height:1.8; margin:0 0 25px; font-family:var(--mincho); border-bottom:1px solid var(--beige-line); padding-bottom:12px; }
 .menu_category .cat_head span{ font-weight:bold; margin-right:15px; }
@@ -470,7 +481,7 @@ h1,h2,h3,p{ margin:0; }
 
   /* --- メニューアーカイブ (本物: サムネ120px左・タイトル16px・説明12px表示) --- */
   #menu_archive{ padding:40px 15px; }
-  .menu_intro{ margin:0 0 30px; }
+  .menu_intro{ padding:28px 20px; margin:0 0 30px; }
   .menu_intro .headline{ font-size:1.286rem; line-height:1.6; }
   .menu_intro .desc{ font-size:0.86rem; line-height:2; }
   .menu_category{ margin:0 0 40px; }
