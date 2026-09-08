@@ -604,21 +604,34 @@ h1,h2,h3,p{ margin:0; }
 }
 
 /* =========================================================
-   画像が回転しながら登場する（★2026-09-08 社長指示）
-   ★このCSSは <html> に js-spin が付いたときだけ効く。
-     JSが動かなければ写真は普通に見えたまま＝事故らない。
+   画像がゆっくり回り続ける（★2026-09-08 社長指示）
+   ・回転は「画像そのもの」に、登場（ふわっと出る）は「外側の箱」に分ける。
+     同じ要素に両方かけると transform を奪い合って、どちらかが効かなくなる。
+   ・★<html> に js-spin が付いたときだけ隠す。JSが止まっても写真は消えない。
+   ・「動きを減らす」設定の人には回さない。
 ========================================================= */
-.js-spin .spin-in{
-  opacity:0;
-  transform:rotate(-100deg) scale(.82);
-  /* 回りきる手前で少しだけ行き過ぎてから戻る曲線。機械的に止まらない */
-  transition:opacity .7s ease, transform 1.15s cubic-bezier(.18,.85,.28,1.06);
+
+/* 回転：常時。60秒で1周＝「よく見ると回っている」速さ */
+.spin-in{
+  animation:slow-spin 60s linear infinite;
   transform-origin:center center;
+  will-change:transform;
+}
+@keyframes slow-spin{
+  from{ transform:rotate(0deg); }
+  to{ transform:rotate(360deg); }
+}
+
+/* 登場：外側の箱をふわっと出す（回転とぶつからないよう拡大と透明度だけ） */
+.js-spin .spin-box{
+  opacity:0; transform:scale(.86);
+  transition:opacity .8s ease, transform 1.1s cubic-bezier(.18,.85,.28,1.06);
   will-change:transform, opacity;
 }
-.js-spin .spin-in.is-in{ opacity:1; transform:rotate(0deg) scale(1); }
+.js-spin .spin-box.is-in{ opacity:1; transform:scale(1); }
 
-/* 動きを減らす設定の方には演出しない（JS側でも判定しているが二重に保証する） */
+/* 動きを減らす設定の方には回さない（JS側でも判定しているが二重に保証する） */
 @media (prefers-reduced-motion: reduce){
-  .js-spin .spin-in{ opacity:1; transform:none; transition:none; }
+  .spin-in{ animation:none; }
+  .js-spin .spin-box{ opacity:1; transform:none; transition:none; }
 }

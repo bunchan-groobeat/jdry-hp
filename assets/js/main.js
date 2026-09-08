@@ -365,8 +365,8 @@
        CSSで先に隠す作りにすると、JSが止まった瞬間に写真が消えたページになる
      ・「動きを減らす」設定の人には演出しない */
   function initSpinIn() {
-    var imgs = document.querySelectorAll(".spin-in");
-    if (!imgs.length) return;
+    var boxes = document.querySelectorAll(".spin-box");
+    if (!boxes.length) return;
 
     var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (reduce || !window.IntersectionObserver) return;
@@ -382,11 +382,11 @@
       });
     }, { threshold: 0.2 });
 
-    Array.prototype.forEach.call(imgs, function (img) { io.observe(img); });
+    Array.prototype.forEach.call(boxes, function (b) { io.observe(b); });
 
     /* 保険：監視が働かない環境でも4秒後には必ず出す */
     setTimeout(function () {
-      Array.prototype.forEach.call(imgs, function (img) { img.classList.add("is-in"); });
+      Array.prototype.forEach.call(boxes, function (b) { b.classList.add("is-in"); });
     }, 4000);
   }
 
