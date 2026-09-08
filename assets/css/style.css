@@ -194,7 +194,22 @@ h1,h2,h3,p{ margin:0; }
 /* =========================================================
    メニューアーカイブ（カテゴリー別・説明付き）
 ========================================================= */
-#menu_archive{ width:var(--container); max-width:100%; margin:0 auto; padding:20px 20px 60px; }
+/* ★2026-09-08 社長「メニューページのみ背景に薄く透かして丸ロゴ入れる大き目で。
+   ドライフルーツから下にいくと常にバックに表示、フッター手前まで」
+   ・background-attachment:fixed なので、スクロールしても丸ロゴはその場に留まる
+   ・この要素（商品一覧）の範囲でしか描かれないので、フッターに入ると自然に消える
+   ・導入文は自前の地色（#f4f1ea）を持っているので、その下では透けない＝実質
+     「ドライフルーツ」から下でだけ見える
+   ・薄さは画像側で作ってある（logo-mark-bg.png＝不透明度7%） */
+#menu_archive{
+  width:var(--container); max-width:100%; margin:0 auto; padding:20px 20px 60px;
+  background:url("../img/logo-mark-bg.png") no-repeat center center fixed;
+  background-size:min(78vh, 78vw) auto;
+}
+/* スマホは画面が狭いので、文字に重なりすぎないよう少し小さくする */
+@media (max-width:820px){
+  #menu_archive{ background-size:min(62vh, 82vw) auto; }
+}
 /* 導入文（★2026-09-08 社長「タイトルを上に小さい文字の説明を下に背景の色変えて」）
    元は見出しが左・説明が右の2カラムで、どちらが主役か分からなかった。
    タイトルを上に大きく、説明を下に小さく置き、地の色を敷いて1つの塊にした。 */
