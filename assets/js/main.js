@@ -357,6 +357,39 @@
     }
   }
 
+
+  /* ---- 画像を回転させながら登場させる（★2026-09-08 社長指示） ----
+     対象＝class="spin-in" を付けた画像（トップの帯2つの丸皿の写真）
+     ・画面に入ったら、傾いた状態から回りながら正位置に収まる
+     ・★JSが動くと確定してから <html> に js-spin を付ける。
+       CSSで先に隠す作りにすると、JSが止まった瞬間に写真が消えたページになる
+     ・「動きを減らす」設定の人には演出しない */
+  function initSpinIn() {
+    var imgs = document.querySelectorAll(".spin-in");
+    if (!imgs.length) return;
+
+    var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduce || !window.IntersectionObserver) return;
+
+    document.documentElement.classList.add("js-spin");
+
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) {
+          e.target.classList.add("is-in");
+          io.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.2 });
+
+    Array.prototype.forEach.call(imgs, function (img) { io.observe(img); });
+
+    /* 保険：監視が働かない環境でも4秒後には必ず出す */
+    setTimeout(function () {
+      Array.prototype.forEach.call(imgs, function (img) { img.classList.add("is-in"); });
+    }, 4000);
+  }
+
   document.addEventListener('DOMContentLoaded', function () {
     initSlider(document.getElementById('top_slider'));
     initSlider(document.getElementById('sp_slider'));
@@ -365,5 +398,6 @@
     initContactForm();
     initReturnTop();
     initTypewriter();
+    initSpinIn();
   });
 })();

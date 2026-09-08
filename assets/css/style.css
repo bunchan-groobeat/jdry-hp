@@ -598,3 +598,23 @@ h1,h2,h3,p{ margin:0; }
   .headline.is-typing .tw-char{ opacity:1; transform:none; transition:none; }
   .js-tw .index_band .band_text .desc.lead{ opacity:1; transform:none; transition:none; }
 }
+
+/* =========================================================
+   画像が回転しながら登場する（★2026-09-08 社長指示）
+   ★このCSSは <html> に js-spin が付いたときだけ効く。
+     JSが動かなければ写真は普通に見えたまま＝事故らない。
+========================================================= */
+.js-spin .spin-in{
+  opacity:0;
+  transform:rotate(-100deg) scale(.82);
+  /* 回りきる手前で少しだけ行き過ぎてから戻る曲線。機械的に止まらない */
+  transition:opacity .7s ease, transform 1.15s cubic-bezier(.18,.85,.28,1.06);
+  transform-origin:center center;
+  will-change:transform, opacity;
+}
+.js-spin .spin-in.is-in{ opacity:1; transform:rotate(0deg) scale(1); }
+
+/* 動きを減らす設定の方には演出しない（JS側でも判定しているが二重に保証する） */
+@media (prefers-reduced-motion: reduce){
+  .js-spin .spin-in{ opacity:1; transform:none; transition:none; }
+}
