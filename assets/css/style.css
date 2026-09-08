@@ -754,12 +754,11 @@ h1,h2,h3,p{ margin:0; }
 }
 
 /* メニューページの商品写真（23枚） */
-.menu_item:nth-child(5n+1) .thumb{ transform:rotate(-3deg); }
-.menu_item:nth-child(5n+2) .thumb{ transform:rotate(2.2deg); }
-.menu_item:nth-child(5n+3) .thumb{ transform:rotate(-2deg); }
-.menu_item:nth-child(5n+4) .thumb{ transform:rotate(4deg); }
-.menu_item:nth-child(5n+5) .thumb{ transform:rotate(-4.5deg); }
-.menu_item .thumb:hover{ transform:rotate(0deg) scale(1.02); }
+/* ★2026-09-08 社長「メニュー内の画像は回転解除して」
+   メニューページの商品写真の傾きを外し、まっすぐ並べる。
+   トップの FOOD/DRINK カテゴリ写真の傾きはそのまま（指示は「メニュー内」のため）。 */
+.menu_item .thumb{ transform:none; }
+.menu_item .thumb:hover{ transform:scale(1.02); }
 
 /* トップの FOOD/DRINK カテゴリ写真（6枠） */
 .cat_card:nth-child(5n+1) .cat_photo{ transform:rotate(-2.5deg); }
@@ -771,7 +770,8 @@ h1,h2,h3,p{ margin:0; }
 
 /* スマホは写真が小さく、傾けると文字と干渉するので浅くする */
 @media (max-width:820px){
-  .menu_item .thumb,
+  /* ★メニューの商品写真は回転解除（社長指示）。トップのカテゴリ写真だけ浅く傾ける */
+  .menu_item .thumb{ transform:none !important; }
   .cat_photo{ transform:rotate(-1.5deg) !important; }
   .menu_item .thumb:hover,
   .cat_card:hover .cat_photo{ transform:rotate(0deg) !important; }
