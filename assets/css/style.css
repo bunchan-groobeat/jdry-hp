@@ -118,8 +118,30 @@ h1,h2,h3,p{ margin:0; }
 /* スマホ用メインスライダー（本物のsp_mainvisual準拠・PCでは非表示） */
 #sp_slider{ display:none; overflow:hidden; background:#fff; }
 #sp_slider .slide{ display:none; }
-#sp_slider .slide.is-active{ display:block; }
+#sp_slider .slide.is-active{ display:block; position:relative; }
 #sp_slider img{ width:100%; display:block; }
+
+/* スライドの英字（★2026-09-09 社長指示：白・明朝・ゆっくりふわっと出す）
+   写真の明るさがまちまちなので、薄い影と極薄のグラデーションで白文字を読ませる */
+#sp_slider .sp_label{
+  position:absolute; inset:0;
+  display:flex; align-items:center; justify-content:center;
+  font-family:var(--mincho);
+  font-size:1.8rem; font-weight:bold; letter-spacing:.22em; text-indent:.22em;
+  color:#fff; text-shadow:0 2px 16px rgba(0,0,0,.6), 0 0 6px rgba(0,0,0,.45);
+  background:linear-gradient(rgba(0,0,0,.26), rgba(0,0,0,.10) 45%, rgba(0,0,0,.26));
+  opacity:0;
+  pointer-events:none;
+}
+#sp_slider .slide.is-active .sp_label{ animation:sp_label_in 2.6s cubic-bezier(.22,.61,.36,1) .45s forwards; }
+@keyframes sp_label_in{
+  from{ opacity:0; transform:translateY(12px); }
+  to{ opacity:1; transform:translateY(0); }
+}
+@media (prefers-reduced-motion: reduce){
+  #sp_slider .sp_label{ opacity:1; }
+  #sp_slider .slide.is-active .sp_label{ animation:none; }
+}
 
 /* =========================================================
    トップ: ベージュ 2カラム帯 (content1 / content2)
