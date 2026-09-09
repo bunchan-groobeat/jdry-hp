@@ -127,7 +127,9 @@ h1,h2,h3,p{ margin:0; }
   position:absolute; inset:0;
   display:flex; align-items:center; justify-content:center;
   font-family:var(--mincho);
-  font-size:1.8rem; font-weight:bold; letter-spacing:.22em; text-indent:.22em;
+  /* 「DRY FRUIT DRINKS」は16文字あるので、狭い端末でははみ出さないよう画面幅で縮める */
+  font-size:min(1.8rem, 6.2vw); font-weight:bold; letter-spacing:.22em; text-indent:.22em;
+  padding:0 14px; text-align:center;
   color:#fff; text-shadow:0 2px 16px rgba(0,0,0,.6), 0 0 6px rgba(0,0,0,.45);
   /* 文字の真裏だけをふわっと落とす。明るい写真（白背景のドリンク）でも白文字が沈まない */
   background:
