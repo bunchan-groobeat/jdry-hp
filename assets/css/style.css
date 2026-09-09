@@ -973,3 +973,30 @@ h1,h2,h3,p{ margin:0; }
 .faq_q::before{ content:"Q."; color:var(--accent); font-weight:bold; margin-right:.5em; }
 .faq_a{ margin:0; font-size:1rem; line-height:2; padding-left:1.6em; text-indent:-1.6em; }
 .faq_a::before{ content:"A."; color:#999; font-weight:bold; margin-right:.5em; }
+
+/* =========================================================
+   オープニング（★2026-09-09 社長「白い画面に真ん中JDRYのロゴがゆっくり浮き出てきて、
+   表示されたらホーム画面へ」）。トップページだけ。
+   ・**消えるところまでCSSだけで完結させる**。JSが動かなくても必ず開く＝白いまま固まらない
+   ・ロゴ1.4秒でゆっくり浮き出る → 0.5秒見せる → 0.8秒で幕が引く（合計およそ2.7秒）
+   ・「動きを減らす」設定の方には出さない
+========================================================= */
+#opening{
+  position:fixed; inset:0; z-index:9999; background:#fff;
+  display:flex; align-items:center; justify-content:center;
+  animation:op_curtain .8s ease 1.9s forwards;
+}
+#opening img{
+  width:min(260px,46vw); height:auto;
+  opacity:0; transform:translateY(12px) scale(.98);
+  animation:op_logo 1.4s cubic-bezier(.22,.68,.28,1) .25s forwards;
+}
+@keyframes op_logo{
+  to{ opacity:1; transform:translateY(0) scale(1); }
+}
+@keyframes op_curtain{
+  to{ opacity:0; visibility:hidden; }
+}
+@media (prefers-reduced-motion: reduce){
+  #opening{ display:none; }
+}

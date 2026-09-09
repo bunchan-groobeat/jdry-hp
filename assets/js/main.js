@@ -541,3 +541,14 @@
   window.addEventListener('resize', check);
   check();
 })();
+
+/* オープニングの後片付け（社長 2026-09-09）。
+   幕が引くのはCSSのアニメーション。ここでやるのはDOMから外すことだけ＝
+   JSが止まっても幕は必ず開く。保険で4秒後にも外す。 */
+(function () {
+  var op = document.getElementById('opening');
+  if (!op) return;
+  function drop() { if (op && op.parentNode) { op.parentNode.removeChild(op); op = null; } }
+  op.addEventListener('animationend', function (e) { if (e.animationName === 'op_curtain') drop(); });
+  setTimeout(drop, 4000);
+})();

@@ -114,6 +114,14 @@
 </head>
 <body>
 
+<!-- ===== オープニング（社長 2026-09-09「白い画面に真ん中JDRYのロゴがゆっくり浮き出て、
+     表示されたらホーム画面へ」）
+     ★消えるのはCSSのアニメーションだけで行う。JSに頼ると、JSが止まったときに
+       白い画面のまま何も出ないページになる。JSはあと片付け（DOMから外す）だけ。 -->
+<div id="opening" aria-hidden="true">
+  <img src="assets/img/logo-resized.png" width="518" height="459" alt="">
+</div>
+
 <!-- ===== ヘッダー ===== -->
 <header id="header">
   <div id="header_inner">
