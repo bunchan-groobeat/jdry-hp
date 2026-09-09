@@ -350,8 +350,10 @@
         entries.forEach(function (e) { if (e.isIntersecting) { run(); io.disconnect(); } });
       }, { threshold: 0.35 });
       io.observe(el);
-      /* 保険：監視が働かない環境でも4秒後には必ず出す */
-      setTimeout(run, 4000);
+      /* 保険：監視が働かない環境でも4秒後に打ち始める。ただし画面に入っている時だけ
+         （★2026-09-09 社長「スクロールして表示されたらアクション」。
+           画面外なのに勝手に打ち終わっていた） */
+      setTimeout(function () { if (inView(el)) run(); }, 4000);
     } else {
       run();
     }
@@ -384,10 +386,8 @@
 
     Array.prototype.forEach.call(boxes, function (b) { io.observe(b); });
 
-    /* 保険：監視が働かない環境でも4秒後には必ず出す */
-    setTimeout(function () {
-      Array.prototype.forEach.call(boxes, function (b) { b.classList.add("is-in"); });
-    }, 4000);
+    /* 保険：監視が働かない環境でも4秒後に出す。ただし画面に入っているものだけ */
+    safetyNet(boxes, "is-in", 4000);
   }
 
 
@@ -398,6 +398,25 @@
      ・★JSが動くと確定してから <html> に js-mask を付ける。
        CSSで先に隠す作りにすると、JSが止まった瞬間に写真が消えたページになる
      ・「動きを減らす」設定の人には演出しない */
+
+  /* ★2026-09-09 社長「スクロールして画像が表示されたら、アクションにして」。
+     それまでは「保険」のタイマーが time 秒後に**全部**開いていた＝下のほうの写真は
+     スクロールして着いた時にはもう開き終わっていた。
+     保険は残すが、開くのは「そのとき画面に入っているものだけ」にする。
+     画面の外のものは、スクロールして入ってきた時にIntersectionObserverが開く。 */
+  function inView(el) {
+    var r = el.getBoundingClientRect();
+    var h = window.innerHeight || document.documentElement.clientHeight;
+    return r.top < h && r.bottom > 0;
+  }
+  function safetyNet(list, cls, ms) {
+    setTimeout(function () {
+      Array.prototype.forEach.call(list, function (el) {
+        if (inView(el)) el.classList.add(cls);
+      });
+    }, ms);
+  }
+
   function initMaskReveal() {
     var boxes = document.querySelectorAll(".ft_image");
     if (!boxes.length) return;
@@ -428,10 +447,8 @@
       });
     });
 
-    /* 保険：監視が働かない環境でも4秒後には必ず開く */
-    setTimeout(function () {
-      Array.prototype.forEach.call(boxes, function (b) { b.classList.add("is-in"); });
-    }, 5000);
+    /* 保険：監視が働かない環境でも5秒後に開く。ただし画面に入っているものだけ */
+    safetyNet(boxes, "is-in", 5000);
   }
 
 
@@ -461,10 +478,8 @@
 
     Array.prototype.forEach.call(heads, function (h) { io.observe(h); });
 
-    /* 保険：監視が働かない環境でも4秒後には必ず出す */
-    setTimeout(function () {
-      Array.prototype.forEach.call(heads, function (h) { h.classList.add("is-in"); });
-    }, 4000);
+    /* 保険：監視が働かない環境でも4秒後に出す。ただし画面に入っているものだけ */
+    safetyNet(heads, "is-in", 4000);
   }
 
 
@@ -492,10 +507,8 @@
 
     Array.prototype.forEach.call(rows, function (r) { io.observe(r); });
 
-    /* 保険：監視が働かない環境でも4秒後には必ず出す */
-    setTimeout(function () {
-      Array.prototype.forEach.call(rows, function (r) { r.classList.add("is-bounced"); });
-    }, 4000);
+    /* 保険：監視が働かない環境でも4秒後に出す。ただし画面に入っているものだけ */
+    safetyNet(rows, "is-bounced", 4000);
   }
 
   document.addEventListener('DOMContentLoaded', function () {
@@ -511,4 +524,20 @@
     initSlideIn();
     initBadgeBounce();
   });
+})();
+
+/* ヘッダーを画面上に貼り付けたまま、少しスクロールしたら一段縮める
+   （社長 2026-09-09「ヘッダー固定にして」）。
+   固定自体はCSSの position:sticky。ここは「縮める合図」を出すだけ。 */
+(function () {
+  var h = document.getElementById('header');
+  if (!h) return;
+  var on = false;
+  function check() {
+    var want = window.scrollY > 40;
+    if (want !== on) { on = want; h.classList.toggle('is-stuck', on); }
+  }
+  window.addEventListener('scroll', check, { passive: true });
+  window.addEventListener('resize', check);
+  check();
 })();
