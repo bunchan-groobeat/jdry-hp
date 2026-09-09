@@ -104,8 +104,12 @@ h1,h2,h3,p{ margin:0; }
 ========================================================= */
 #top_slider{ position:relative; overflow:hidden; background:#fff; }
 #top_slider .slides{ position:relative; }
-#top_slider .slide{ display:none; }
-#top_slider .slide.is-active{ display:block; position:relative; }
+/* ★2026-09-09 社長指示：パッと切り替えず、今の写真が段々消えて次が段々出てくる。
+   全部を重ねて置き、表示中だけ不透明にする（1.8秒かけて入れ替わる）。
+   1枚目だけ position:relative で残し、これが帯の高さを決める。 */
+#top_slider .slide{ position:absolute; inset:0; opacity:0; transition:opacity 1.8s ease-in-out; }
+#top_slider .slide:first-child{ position:relative; }
+#top_slider .slide.is-active{ opacity:1; z-index:1; }
 #top_slider .slide img{ width:100%; display:block; }
 .slider_dots{ position:absolute; left:0; right:0; bottom:15px; text-align:center; }
 .slider_dots button{
@@ -117,8 +121,10 @@ h1,h2,h3,p{ margin:0; }
 
 /* スマホ用メインスライダー（本物のsp_mainvisual準拠・PCでは非表示） */
 #sp_slider{ display:none; overflow:hidden; background:#fff; }
-#sp_slider .slide{ display:none; }
-#sp_slider .slide.is-active{ display:block; position:relative; }
+#sp_slider .slides{ position:relative; }
+#sp_slider .slide{ position:absolute; inset:0; opacity:0; transition:opacity 1.8s ease-in-out; }
+#sp_slider .slide:first-child{ position:relative; }
+#sp_slider .slide.is-active{ opacity:1; z-index:1; }
 #sp_slider img{ width:100%; display:block; }
 
 /* スライドの英字（★2026-09-09 社長指示：白・明朝・ゆっくりふわっと出す。PC・スマホ共通）
@@ -134,7 +140,7 @@ h1,h2,h3,p{ margin:0; }
   /* 文字の真裏だけをふわっと落とす。明るい写真（白背景のドリンク）でも白文字が沈まない */
   background:
     radial-gradient(ellipse 62% 58% at 50% 50%, rgba(0,0,0,.38), rgba(0,0,0,0) 72%),
-    linear-gradient(rgba(0,0,0,.22), rgba(0,0,0,.06) 45%, rgba(0,0,0,.22));
+    linear-gradient(rgba(0,0,0,.12), rgba(0,0,0,.03) 45%, rgba(0,0,0,.12));
   opacity:0;
   pointer-events:none;
 }
@@ -148,6 +154,7 @@ h1,h2,h3,p{ margin:0; }
 @media (prefers-reduced-motion: reduce){
   .mv_label{ opacity:1; }
   .slide.is-active .mv_label{ animation:none; }
+  #top_slider .slide, #sp_slider .slide{ transition:none; }
 }
 
 /* =========================================================
