@@ -105,7 +105,7 @@ h1,h2,h3,p{ margin:0; }
 #top_slider{ position:relative; overflow:hidden; background:#fff; }
 #top_slider .slides{ position:relative; }
 #top_slider .slide{ display:none; }
-#top_slider .slide.is-active{ display:block; }
+#top_slider .slide.is-active{ display:block; position:relative; }
 #top_slider .slide img{ width:100%; display:block; }
 .slider_dots{ position:absolute; left:0; right:0; bottom:15px; text-align:center; }
 .slider_dots button{
@@ -121,26 +121,31 @@ h1,h2,h3,p{ margin:0; }
 #sp_slider .slide.is-active{ display:block; position:relative; }
 #sp_slider img{ width:100%; display:block; }
 
-/* スライドの英字（★2026-09-09 社長指示：白・明朝・ゆっくりふわっと出す）
+/* スライドの英字（★2026-09-09 社長指示：白・明朝・ゆっくりふわっと出す。PC・スマホ共通）
    写真の明るさがまちまちなので、薄い影と極薄のグラデーションで白文字を読ませる */
-#sp_slider .sp_label{
+.mv_label{
   position:absolute; inset:0;
   display:flex; align-items:center; justify-content:center;
   font-family:var(--mincho);
   font-size:1.8rem; font-weight:bold; letter-spacing:.22em; text-indent:.22em;
   color:#fff; text-shadow:0 2px 16px rgba(0,0,0,.6), 0 0 6px rgba(0,0,0,.45);
-  background:linear-gradient(rgba(0,0,0,.26), rgba(0,0,0,.10) 45%, rgba(0,0,0,.26));
+  /* 文字の真裏だけをふわっと落とす。明るい写真（白背景のドリンク）でも白文字が沈まない */
+  background:
+    radial-gradient(ellipse 62% 58% at 50% 50%, rgba(0,0,0,.38), rgba(0,0,0,0) 72%),
+    linear-gradient(rgba(0,0,0,.22), rgba(0,0,0,.06) 45%, rgba(0,0,0,.22));
   opacity:0;
   pointer-events:none;
 }
-#sp_slider .slide.is-active .sp_label{ animation:sp_label_in 2.6s cubic-bezier(.22,.61,.36,1) .45s forwards; }
-@keyframes sp_label_in{
+/* PCは横長の帯なので大きめに。ドット（下端）と重ならないよう中央のまま */
+#top_slider .mv_label{ font-size:2.9rem; letter-spacing:.3em; text-indent:.3em; }
+.slide.is-active .mv_label{ animation:mv_label_in 2.6s cubic-bezier(.22,.61,.36,1) .45s forwards; }
+@keyframes mv_label_in{
   from{ opacity:0; transform:translateY(12px); }
   to{ opacity:1; transform:translateY(0); }
 }
 @media (prefers-reduced-motion: reduce){
-  #sp_slider .sp_label{ opacity:1; }
-  #sp_slider .slide.is-active .sp_label{ animation:none; }
+  .mv_label{ opacity:1; }
+  .slide.is-active .mv_label{ animation:none; }
 }
 
 /* =========================================================
