@@ -54,7 +54,8 @@ h1,h2,h3,p{ margin:0; }
 #header{ position:relative; text-align:center; z-index:20; }
 #header_inner{ padding:25px 0; }
 #logo_image{ margin-bottom:20px; }
-#logo_image img{ height:auto; }
+/* ★2026-09-09 社長指示でヘッダーロゴを一回り大きく（PC 175→200px） */
+#logo_image img{ height:auto; width:200px; }
 
 .global_menu{ display:inline-block; font-weight:bold; }
 /* ★2026-09-08 社長「ヘッダーが小さい文字が見ずらい」。
@@ -575,7 +576,7 @@ h1,h2,h3,p{ margin:0; }
   #header{ height:60px; text-align:left; }
   #header_inner{ display:flex; align-items:center; height:60px; padding:0; }
   #logo_image{ margin:0; padding-left:15px; }
-  #logo_image img{ height:20px; width:auto; }
+  #logo_image img{ height:24px; width:auto; } /* ★2026-09-09 一回り大きく（20→24px） */
 
   /* ハンバーガーボタン（本物 a.menu_button: 60x60・枠なし・#888の三本線） */
   .nav_toggle_btn{
