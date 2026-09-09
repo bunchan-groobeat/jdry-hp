@@ -93,6 +93,7 @@ h1,h2,h3,p{ margin:0; }
 #main_image img{ width:100%; display:block; }
 /* ベージュ帯（CONTACT / FOOD TRUCK など） */
 #main_image3{ background:var(--beige); text-align:center; }
+#main_image3 h1,
 #main_image3 h2{ height:200px; line-height:200px; font-size:1.714rem; font-weight:bold; font-family:var(--mincho); }
 
 /* パンくず */
@@ -688,6 +689,7 @@ h1,h2,h3,p{ margin:0; }
 
   /* --- ページ見出し帯・パンくず (本物 #main_image3: padding40px 15px・21px) --- */
   #main_image3{ padding:40px 15px; }
+  #main_image3 h1,
   #main_image3 h2{ height:auto; line-height:1.6; font-size:1.5rem; }
   .breadcrumb{ font-size:0.86rem; padding:12px 0; }
 
