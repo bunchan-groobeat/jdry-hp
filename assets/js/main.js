@@ -550,7 +550,7 @@
   if (!op) return;
   function drop() { if (op && op.parentNode) { op.parentNode.removeChild(op); op = null; } }
   op.addEventListener('animationend', function (e) { if (e.animationName === 'op_curtain') drop(); });
-  /* ★保険は「幕が引き終わる時刻（6.2秒）」より後ろに置くこと。
+  /* ★保険は「幕が引き終わる時刻（3.6秒）」より後ろに置くこと。
      短いとアニメの途中で外れて、オープニングが尻切れになる（2026-09-10 に4秒のままで踏みかけた） */
-  setTimeout(drop, 8500);
+  setTimeout(drop, 5500);
 })();
