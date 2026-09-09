@@ -652,6 +652,13 @@ h1,h2,h3,p{ margin:0; }
   .menu_item .title{ grid-area:title; align-self:center; font-size:1.143rem; margin:0; }
   .menu_item .excerpt{ grid-area:excerpt; display:block; font-size:0.86rem; line-height:2; margin:12px 0 0; }
 
+  /* --- よくあるご質問 --- */
+  .section_faq{ width:auto; max-width:100%; padding:40px 15px 10px; }
+  .section_faq .headline{ font-size:1.714rem; font-weight:bold; margin:0 0 20px; }
+  .faq_item{ padding:0 0 20px; margin:0 0 20px; }
+  .faq_q{ font-size:1.05rem; }
+  .faq_a{ font-size:0.93rem; line-height:1.9; }
+
   /* --- HOMEお知らせ (本物 #index_news_blog: サムネ100px左・日付12px・題14px) --- */
   .section_topics{ width:auto; max-width:100%; padding:30px 15px 40px; }
   .section_topics .headline{ font-size:1.714rem; font-weight:bold; margin:0 0 10px; }
@@ -886,3 +893,20 @@ h1,h2,h3,p{ margin:0; }
 @media (prefers-reduced-motion: reduce){
   .js-mask .ft_image img{ clip-path:none; transition:none; }
 }
+
+/* =========================================================
+   トップ: よくあるご質問（★2026-09-09 新設）
+   検索とAI検索に事実を拾わせる枠。見出しはTopicsと同じ調子にそろえる。
+========================================================= */
+.section_faq{ width:var(--container); max-width:100%; margin:0 auto; padding:60px 20px 20px; }
+.section_faq .headline{ font-size:2.571rem; font-weight:400; line-height:1.6; margin:0 0 30px; font-family:var(--mincho); }
+.faq_list{ margin:0; }
+.faq_item{ border-bottom:1px dotted var(--beige-line); padding:0 0 26px; margin:0 0 26px; }
+.faq_item:last-child{ border-bottom:none; }
+.faq_q{
+  font-family:var(--mincho); font-size:1.15rem; font-weight:bold; line-height:1.7;
+  margin:0 0 10px; padding-left:1.6em; text-indent:-1.6em;
+}
+.faq_q::before{ content:"Q."; color:var(--accent); font-weight:bold; margin-right:.5em; }
+.faq_a{ margin:0; font-size:1rem; line-height:2; padding-left:1.6em; text-indent:-1.6em; }
+.faq_a::before{ content:"A."; color:#999; font-weight:bold; margin-right:.5em; }
