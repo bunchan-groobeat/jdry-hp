@@ -980,13 +980,16 @@ h1,h2,h3,p{ margin:0; }
    ・**消えるところまでCSSだけで完結させる**。JSが動かなくても必ず開く＝白いまま固まらない
    ・★2026-09-10 社長「もっとゆっくり、最初白画面、そこから段々ロゴ表示」＝
      まず0.9秒はロゴを出さず白いだけ → 2.6秒かけて段々ロゴが出る → 0.7秒見せる
-     → 1.0秒で幕が引く（合計およそ5.2秒）
+     → ★2026-09-10 社長「オープニングからホーム画面もゆっくり段々消えるように」＝
+       2.0秒かけて幕が薄れていく（合計およそ6.2秒）
    ・「動きを減らす」設定の方には出さない
 ========================================================= */
 #opening{
   position:fixed; inset:0; z-index:9999; background:#fff;
   display:flex; align-items:center; justify-content:center;
-  animation:op_curtain 1s ease 4.2s forwards;
+  /* 幕は「消える」というより「薄れていく」。出だしをゆるやかにして、
+     ホームの写真がだんだん透けて見えてくる形にする */
+  animation:op_curtain 2s cubic-bezier(.4,.05,.35,1) 4.2s forwards;
 }
 #opening img{
   width:min(260px,46vw); height:auto;
@@ -1001,7 +1004,9 @@ h1,h2,h3,p{ margin:0; }
   to  { opacity:1;   transform:scale(1); }
 }
 @keyframes op_curtain{
-  to{ opacity:0; visibility:hidden; }
+  0%  { opacity:1; }
+  55% { opacity:.55; }   /* 中盤はまだうっすら白い＝一気に切り替わらない */
+  to  { opacity:0; visibility:hidden; }
 }
 @media (prefers-reduced-motion: reduce){
   #opening{ display:none; }
