@@ -978,21 +978,27 @@ h1,h2,h3,p{ margin:0; }
    オープニング（★2026-09-09 社長「白い画面に真ん中JDRYのロゴがゆっくり浮き出てきて、
    表示されたらホーム画面へ」）。トップページだけ。
    ・**消えるところまでCSSだけで完結させる**。JSが動かなくても必ず開く＝白いまま固まらない
-   ・ロゴ1.4秒でゆっくり浮き出る → 0.5秒見せる → 0.8秒で幕が引く（合計およそ2.7秒）
+   ・★2026-09-10 社長「もっとゆっくり、最初白画面、そこから段々ロゴ表示」＝
+     まず0.9秒はロゴを出さず白いだけ → 2.6秒かけて段々ロゴが出る → 0.7秒見せる
+     → 1.0秒で幕が引く（合計およそ5.2秒）
    ・「動きを減らす」設定の方には出さない
 ========================================================= */
 #opening{
   position:fixed; inset:0; z-index:9999; background:#fff;
   display:flex; align-items:center; justify-content:center;
-  animation:op_curtain .8s ease 1.9s forwards;
+  animation:op_curtain 1s ease 4.2s forwards;
 }
 #opening img{
   width:min(260px,46vw); height:auto;
-  opacity:0; transform:translateY(12px) scale(.98);
-  animation:op_logo 1.4s cubic-bezier(.22,.68,.28,1) .25s forwards;
+  opacity:0; transform:scale(.985);
+  /* ★出だしをゆるやかにして「段々にじみ出る」感じにする。
+     動かしすぎると「浮き出る」より「滑り込む」に見えるので、移動はやめて濃さだけで出す */
+  animation:op_logo 2.6s cubic-bezier(.42,0,.4,1) .9s forwards;
 }
 @keyframes op_logo{
-  to{ opacity:1; transform:translateY(0) scale(1); }
+  0%  { opacity:0;   transform:scale(.985); }
+  45% { opacity:.35; }
+  to  { opacity:1;   transform:scale(1); }
 }
 @keyframes op_curtain{
   to{ opacity:0; visibility:hidden; }
