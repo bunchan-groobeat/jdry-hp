@@ -706,7 +706,16 @@ h1,h2,h3,p{ margin:0; }
   .menu_intro .headline{ font-size:1.286rem; line-height:1.6; }
   .menu_intro .desc{ font-size:0.86rem; line-height:2; }
   .menu_category{ margin:0 0 40px; }
-  .menu_category .cat_head{ font-size:1.5rem; margin:0 0 25px; }
+  /* ★2026-09-10 社長「スマホのタイトル1列に収まるように」。
+     いちばん長い「ドライフルーツシロップ」「ドライフルーツジュース」は11文字。
+     アイコンぶんを足すと 12.5文字ぶんの幅が要る（実測：24.4pxで317px必要／枠は285px）。
+     ・折り返しを禁止し、文字サイズを画面幅に追従させて必ず1行に収める
+     ・左右の余白とアイコンを詰めて、そのぶん文字を大きく保つ */
+  .menu_category .cat_head{
+    font-size:clamp(15px, 5.9vw, 24px); margin:0 0 25px;
+    padding:18px 12px; white-space:nowrap;
+  }
+  .menu_category .cat_head span::before{ width:1.15em; height:1.15em; margin:-.15em .35em 0 0; }
   .menu_items{ display:block; }
   /* スマホは float を使わない。説明文が写真の下に回り込むと読みにくいため、
      写真＋題名を1行目、説明文は幅いっぱいの2行目に置く（2026-09-09 社長指摘） */
