@@ -986,26 +986,35 @@ h1,h2,h3,p{ margin:0; }
 #opening{
   position:fixed; inset:0; z-index:9999; background:#fff;
   display:flex; align-items:center; justify-content:center;
-  /* 幕は「消える」というより「薄れていく」。出だしをゆるやかにして、
-     ホームの写真がだんだん透けて見えてくる形にする */
-  animation:op_curtain 1.25s cubic-bezier(.4,.05,.35,1) 2.35s forwards;
+  /* 幕は「消える」というより「薄れていく」。
+     ★2026-09-10 社長「切り替えはもっとスムーズに」＝
+       途中に中割り（55%）を置いていたのをやめた。中割りがあると、そこを境に
+       速度曲線が掛かり直して“かくっ”と段が付く。始点と終点だけにして一息で抜く。
+       あわせて、ほんの少しだけ奥へ引かせる（1→1.03）＝ただ暗くなるより自然に見える。 */
+  animation:op_curtain 1.4s cubic-bezier(.33,0,.2,1) 2.35s forwards;
+  transform-origin:center center;
 }
 #opening img{
   width:min(260px,46vw); height:auto;
   opacity:0; transform:scale(.985);
   /* ★出だしをゆるやかにして「段々にじみ出る」感じにする。
      動かしすぎると「浮き出る」より「滑り込む」に見えるので、移動はやめて濃さだけで出す */
-  animation:op_logo 1.5s cubic-bezier(.42,0,.4,1) .5s forwards;
+  /* ★ロゴは幕より0.1秒早く抜き始め、幕より先に消えきる。
+     同時に消すと、白が薄れる途中でロゴだけが写真の上に浮いて見える */
+  animation:op_logo 1.5s cubic-bezier(.42,0,.4,1) .5s forwards,
+            op_logo_out .85s cubic-bezier(.4,0,.3,1) 2.25s forwards;
 }
 @keyframes op_logo{
   0%  { opacity:0;   transform:scale(.985); }
   45% { opacity:.35; }
   to  { opacity:1;   transform:scale(1); }
 }
+@keyframes op_logo_out{
+  to{ opacity:0; }
+}
 @keyframes op_curtain{
-  0%  { opacity:1; }
-  55% { opacity:.55; }   /* 中盤はまだうっすら白い＝一気に切り替わらない */
-  to  { opacity:0; visibility:hidden; }
+  from{ opacity:1; transform:scale(1); }
+  to  { opacity:0; transform:scale(1.03); visibility:hidden; }
 }
 @media (prefers-reduced-motion: reduce){
   #opening{ display:none; }
