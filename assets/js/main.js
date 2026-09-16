@@ -51,11 +51,11 @@
   /* ---------- Instagram フィード ----------
      修復方針: 静的サイトでは WordPress プラグインが使えないため、
      Behold.so 等の無料フィードサービスが返す JSON を読み込んで描画する。
-     ・Behold.so で @jdry.food を連携し、発行される Feed ID を BEHOLD_FEED_ID に設定する。
+     ・Behold.so で @jdry.food2025 を連携し、発行される Feed ID を BEHOLD_FEED_ID に設定する。
        → https://behold.so/  （無料枠あり・APIキー管理不要・自動更新）
      ・Feed ID 未設定の間はプレースホルダーのままにする。
   ------------------------------------------------------------ */
-  var BEHOLD_FEED_ID = ''; // 例: 'abcd1234EFGh' （J-DRYさんが連携後に設定）
+  var BEHOLD_FEED_ID = 'L7cnCstRpOZxoaMB87WH'; // Behold フィード jdry-hp（@jdry.food2025・2026-09-16 接続）
   var INSTA_MAX = 6;
 
   function initInstagram() {
@@ -71,11 +71,17 @@
         feed.innerHTML = '';
         posts.slice(0, INSTA_MAX).forEach(function (p) {
           var a = document.createElement('a');
-          a.href = p.permalink || 'https://www.instagram.com/jdry.food/';
+          a.href = p.permalink || 'https://www.instagram.com/jdry.food2025/';
           a.target = '_blank';
           a.rel = 'noopener nofollow';
           var img = document.createElement('img');
-          img.src = p.thumbnailUrl || p.mediaUrl || p.sizes && p.sizes.small && p.sizes.small.mediaUrl;
+          // 画像は Behold 側のCDN（sizes）を優先する。
+          // thumbnailUrl / mediaUrl は Instagram の署名付きURLで時間が経つと切れるため最後の保険。
+          var sz = p.sizes || {};
+          img.src = (sz.medium && sz.medium.mediaUrl) ||
+                    (sz.large && sz.large.mediaUrl) ||
+                    (sz.small && sz.small.mediaUrl) ||
+                    p.thumbnailUrl || p.mediaUrl;
           img.alt = (p.caption || 'J-DRY Instagram').slice(0, 60);
           img.loading = 'lazy';
           a.appendChild(img);
