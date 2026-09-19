@@ -1,13 +1,18 @@
-# J-DRY 本番用 robots.txt — 2026-09-09 太郎
-# ★このファイルは「入れ替え公開の当日」に置くもの。確認用サーバーには置かない。
-# 方針: 検索エンジンとAI検索の両方に、全ページを読ませる。
+# J-DRY 本番用 robots.txt — 2026-09-19 太郎（統一形へ更新。初版 2026-09-09）
+# ★正本＝C:\HQ\skills\hp-seisaku\robots-template.txt（2026-09-19 統一形）。ロボット名の増減は正本を先に直す。
+# ★このファイルは「入れ替え公開の当日」に置くもの。確認用サーバー（GitHub Pages 制作版・noindex）には置かない。
+# 方針: 検索エンジンと AI検索の両方に、全ページを読ませる。
+#   `*` Allow で実質すべて通るが、AI各社の「検索用」ロボットは名前を明示して文書化する。
+#   OpenAI公式: OAI-SearchBot を拒否すると ChatGPT検索の回答に表示されない。
+#   Anthropic公式: Claude-SearchBot が Claude検索の索引。Perplexity公式: PerplexityBot は索引のみ（学習には使わない）。
+#   根拠＝projects\shukyaku-report\調査_SEO_AIO_LLMO_最新_2026-09-19.md §2-13〜16・§3-1
+#   （許可＝学習にも使われうる。外すなら社長判断。Google-Extended を拒否すると Gemini 接地からも消える可能性）
 
 User-agent: *
 Allow: /
 
-# --- AI検索に載るための明示許可（LLMO/AIO）---
-# ★2026-09-09 時点で、この6つを止めていると ChatGPT・Claude・Perplexity の
-#   回答内に店名が出にくくなる。逆に許可＝学習にも使われうる（社長判断で外せる）。
+# --- AI検索・AI各社のロボット（明示許可・10種）---
+# OpenAI（ChatGPT）: 学習／検索索引／ユーザー操作
 User-agent: GPTBot
 Allow: /
 
@@ -17,13 +22,29 @@ Allow: /
 User-agent: ChatGPT-User
 Allow: /
 
+# Anthropic（Claude）: 学習／検索索引／ユーザー操作
 User-agent: ClaudeBot
 Allow: /
 
+User-agent: Claude-SearchBot
+Allow: /
+
+User-agent: Claude-User
+Allow: /
+
+# Perplexity: 索引／ユーザー操作
 User-agent: PerplexityBot
 Allow: /
 
+User-agent: Perplexity-User
+Allow: /
+
+# Google（Gemini 接地・学習の制御。AI Overviews は Googlebot 側で、これとは別）
 User-agent: Google-Extended
+Allow: /
+
+# Microsoft（Bing ＝ ChatGPT・Copilot の索引の元）
+User-agent: Bingbot
 Allow: /
 
 Sitemap: https://j-dry.com/sitemap.xml
