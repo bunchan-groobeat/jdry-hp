@@ -1,37 +1,51 @@
-# J-DRY 入れ替え用 301リダイレクト — 2026-09-09 太郎
-# 置き場所: j-dry.com のドキュメントルート直下 .htaccess
+# J-DRY 入れ替え用 .htaccess（301リダイレクト＋URLの正規化） — 2026-09-09 太郎／2026-10-01 改訂（判定役）
+# 置き場所: j-dry.com のドキュメントルート直下 .htaccess（make-honban.sh が本番セットへ自動で入れる）
 # 旧URL一覧は 2026-09-09 に j-dry.com/wp-sitemap.xml を実測して作成（旧37URL）。
-# ★3サイトでここだけ「37URL → 5URL」の統合。個別ページの評価は引き継がれにくいので、
+#   ★2026-10-01 再実測＝wp-sitemap の URL は 38件（users サイトマップの /archives/author/jdrymaster を追加）。
+# ★3サイトでここだけ「38URL → 5URL」の統合。個別ページの評価は引き継がれにくいので、
 #   せめてカテゴリ単位でアンカーへ落として関連性を残す。
 # ★アンカー先は menu.html に実在することを確認済み（id= dryfruit / drink / herbtea / granola / other / syrup）。
 #   ★旧スラッグ dryfruitsyrup に対応する新idは syrup（名前が違う。取り違え注意）
+#
+# 🔴2026-10-01 修正＝行き先に # が入る行には必ず NE を付ける。
+#   NE が無いと Apache は # を %23 に変えて送り、/menu.html%23dryfruit という存在しないURLへ飛ばして 404 になる
+#   （Apache 公式 mod_rewrite フラグ解説の [NE] の例そのもの。Pazoo の .htaccess は同じ理由で NE を付けている）。
+#   旧版はアンカー付きの18行すべてに NE が無かった。
 
 <IfModule mod_rewrite.c>
 RewriteEngine On
 
+# --- 0) URLの正規化（2026-10-01 追加）------------------------------------
+# 現行（ロリポップ）の実測＝www は 301 で www無しへ／http は 200（https へ寄せていない）。
+# 新サーバーでは http も https へ寄せる（水野谷と同じ形）。
+RewriteCond %{HTTPS} !=on
+RewriteRule ^(.*)$ https://j-dry.com/$1 [R=301,L]
+RewriteCond %{HTTP_HOST} ^www\.j-dry\.com$ [NC]
+RewriteRule ^(.*)$ https://j-dry.com/$1 [R=301,L]
+
 # --- 1) メニューのカテゴリ（sitemapに載っている形）---
-RewriteRule ^archives/menu/menu_category/dryfruit/?$      /menu.html#dryfruit  [R=301,L]
-RewriteRule ^archives/menu/menu_category/drink/?$         /menu.html#drink     [R=301,L]
-RewriteRule ^archives/menu/menu_category/herbtea/?$       /menu.html#herbtea   [R=301,L]
-RewriteRule ^archives/menu/menu_category/granola/?$       /menu.html#granola   [R=301,L]
-RewriteRule ^archives/menu/menu_category/dryfruitsyrup/?$ /menu.html#syrup     [R=301,L]
-RewriteRule ^archives/menu/menu_category/other/?$         /menu.html#other     [R=301,L]
+RewriteRule ^archives/menu/menu_category/dryfruit/?$      /menu.html#dryfruit  [R=301,NE,L]
+RewriteRule ^archives/menu/menu_category/drink/?$         /menu.html#drink     [R=301,NE,L]
+RewriteRule ^archives/menu/menu_category/herbtea/?$       /menu.html#herbtea   [R=301,NE,L]
+RewriteRule ^archives/menu/menu_category/granola/?$       /menu.html#granola   [R=301,NE,L]
+RewriteRule ^archives/menu/menu_category/dryfruitsyrup/?$ /menu.html#syrup     [R=301,NE,L]
+RewriteRule ^archives/menu/menu_category/other/?$         /menu.html#other     [R=301,NE,L]
 
 # --- 2) メニューのカテゴリ（トップページのリンクで使われている短い形）---
-RewriteRule ^archives/menu_category/dryfruit/?$      /menu.html#dryfruit  [R=301,L]
-RewriteRule ^archives/menu_category/drink/?$         /menu.html#drink     [R=301,L]
-RewriteRule ^archives/menu_category/herbtea/?$       /menu.html#herbtea   [R=301,L]
-RewriteRule ^archives/menu_category/granola/?$       /menu.html#granola   [R=301,L]
-RewriteRule ^archives/menu_category/dryfruitsyrup/?$ /menu.html#syrup     [R=301,L]
-RewriteRule ^archives/menu_category/other/?$         /menu.html#other     [R=301,L]
+RewriteRule ^archives/menu_category/dryfruit/?$      /menu.html#dryfruit  [R=301,NE,L]
+RewriteRule ^archives/menu_category/drink/?$         /menu.html#drink     [R=301,NE,L]
+RewriteRule ^archives/menu_category/herbtea/?$       /menu.html#herbtea   [R=301,NE,L]
+RewriteRule ^archives/menu_category/granola/?$       /menu.html#granola   [R=301,NE,L]
+RewriteRule ^archives/menu_category/dryfruitsyrup/?$ /menu.html#syrup     [R=301,NE,L]
+RewriteRule ^archives/menu_category/other/?$         /menu.html#other     [R=301,NE,L]
 
 # --- 3) メニュー個別25本 → カテゴリのアンカーへ ---
-RewriteRule ^archives/menu/dryfruit/[0-9]+/?$      /menu.html#dryfruit  [R=301,L]
-RewriteRule ^archives/menu/drink/[0-9]+/?$         /menu.html#drink     [R=301,L]
-RewriteRule ^archives/menu/herbtea/[0-9]+/?$       /menu.html#herbtea   [R=301,L]
-RewriteRule ^archives/menu/granola/[0-9]+/?$       /menu.html#granola   [R=301,L]
-RewriteRule ^archives/menu/dryfruitsyrup/[0-9]+/?$ /menu.html#syrup     [R=301,L]
-RewriteRule ^archives/menu/other/[0-9]+/?$         /menu.html#other     [R=301,L]
+RewriteRule ^archives/menu/dryfruit/[0-9]+/?$      /menu.html#dryfruit  [R=301,NE,L]
+RewriteRule ^archives/menu/drink/[0-9]+/?$         /menu.html#drink     [R=301,NE,L]
+RewriteRule ^archives/menu/herbtea/[0-9]+/?$       /menu.html#herbtea   [R=301,NE,L]
+RewriteRule ^archives/menu/granola/[0-9]+/?$       /menu.html#granola   [R=301,NE,L]
+RewriteRule ^archives/menu/dryfruitsyrup/[0-9]+/?$ /menu.html#syrup     [R=301,NE,L]
+RewriteRule ^archives/menu/other/[0-9]+/?$         /menu.html#other     [R=301,NE,L]
 
 # --- 4) メニュー一覧 ---
 RewriteRule ^archives/menu/?$                      /menu.html           [R=301,L]
@@ -39,15 +53,37 @@ RewriteRule ^archives/menu/?$                      /menu.html           [R=301,L
 # --- 5) お知らせ・ブログ → topics ---
 RewriteRule ^archives/news/[0-9]+/?$               /topics.html         [R=301,L]
 RewriteRule ^archives/news/?$                      /topics.html         [R=301,L]
+RewriteRule ^archives/category/blog/feed/?$        /topics.html         [R=301,L]
 RewriteRule ^archives/category/blog/?$             /topics.html         [R=301,L]
 RewriteRule ^archives/[0-9]+/?$                    /topics.html         [R=301,L]
+# 投稿者ページ（2026-10-01 追加・wp-sitemap-users に載っている）
+RewriteRule ^archives/author/                      /                    [R=301,L]
 
 # --- 6) 固定ページ（拡張子が付くだけ）---
 RewriteRule ^contact/?$                            /contact.html        [R=301,L]
 RewriteRule ^food-truck/?$                         /food-truck.html     [R=301,L]
 
-# --- 7) WordPressの残骸 ---
-RewriteRule ^feed/?$          /  [R=301,L]
-RewriteRule ^wp-content/      /  [R=301,L]
-RewriteRule ^wp-includes/     /  [R=301,L]
+# --- 7) WordPressの残骸（2026-10-01 に水野谷の型へ揃えて追加）---
+RewriteRule ^wp-sitemap.*\.xml$  /sitemap.xml  [R=301,L]
+RewriteRule ^feed/?$             /  [R=301,L]
+RewriteRule ^comments/feed/?$    /  [R=301,L]
+RewriteRule ^wp-content/         /  [R=301,L]
+RewriteRule ^wp-includes/        /  [R=301,L]
+RewriteRule ^wp-json             /  [R=301,L]
+RewriteRule ^xmlrpc\.php$        /  [R=301,L]
+RewriteRule ^wp-admin/?$         /  [R=301,L]
+RewriteRule ^wp-login\.php$      /  [R=301,L]
 </IfModule>
+
+# --- 8) 静的サイトなので index.html を既定にする ---
+DirectoryIndex index.html
+
+# --- 9) 自前フォーム（send.php）の設定と記録をブラウザから読ませない（templates/form-php/htaccess.txt と同じ）---
+<FilesMatch "^(form-config\.php|.*\.jsonl|rate\.json)$">
+  Require all denied
+</FilesMatch>
+
+# ★切替後に必ず実測すること（jissoku-kensho）:
+#   curl -sI https://j-dry.com/archives/menu/dryfruit/108 | grep -i location
+#   → 「Location: https://j-dry.com/menu.html#dryfruit」（%23 が出たら NE が効いていない＝🔴）
+#   curl -sI http://j-dry.com/ ／ curl -sI https://www.j-dry.com/ → どちらも 301 で https://j-dry.com/ へ
