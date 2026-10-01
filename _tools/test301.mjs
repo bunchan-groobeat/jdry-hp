@@ -5,7 +5,7 @@ const ht = fs.readFileSync(htPath, 'utf8').split(/\r?\n/);
 const rules = [];
 let cond=false;
 for (const l of ht) {
-  if (/^s*RewriteCond/.test(l)) { cond=true; continue; }
+  if (/^\s*RewriteCond/.test(l)) { cond=true; continue; } // 条件つき（正規化）の行は対象外＝旧パスの行き先だけを見る
   const m = l.match(/^\s*RewriteRule\s+(\S+)\s+(\S+)\s+\[([^\]]*)\]/);
   if (m) { if (!cond) rules.push({ re: new RegExp(m[1]), to: m[2], flags: m[3] }); cond=false; }
 }
