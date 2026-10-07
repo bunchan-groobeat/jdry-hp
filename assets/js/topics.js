@@ -119,6 +119,8 @@
     })
     .then(function (data) {
       var items = (data && data.contents) || [];
+      // ★2026-10-05 テスト投稿が本番に出ていた。題名に「テスト」と入っているものは出さない
+      items = items.filter(function (it) { return !/テスト/.test(String(it.title || '')); });
       if (!items.length) { showEmpty(); return; }
       listEl.innerHTML = '';
       items.forEach(function (item) {

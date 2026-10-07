@@ -577,6 +577,10 @@ h1,h2,h3,p{ margin:0; }
 ========================================================= */
 .contact_wrap{ width:720px; max-width:100%; margin:0 auto; padding:60px 20px 100px; }
 .contact_lead{ text-align:center; font-size:1rem; line-height:2.2; margin:0 0 40px; }
+/* 2026-10-05 本文が薄いページに、最初から書いてある紹介文を足した（検索エンジン向け・読み物としても自然な長さに） */
+.contact_about, .topics_lead{ max-width:40em; margin:0 auto 40px; font-size:.95rem; line-height:2; text-align:left; }
+.topics_lead{ margin-left:0; }  /* 見出し（左寄せ）とそろえる */
+.contact_about a, .topics_lead a{ text-decoration:underline; text-underline-offset:3px; }
 .contact_form dl{ margin:0 0 25px; }
 .contact_form dt{ font-weight:bold; font-size:1rem; margin:0 0 8px; }
 .contact_form dt .req{ color:var(--accent); font-size:0.86rem; margin-left:8px; }
