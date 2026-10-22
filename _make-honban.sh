@@ -48,10 +48,19 @@ echo "=== ⑤ robots / .htaccess / フォーム"
 grep -v "^#" "$SRC/_robots_本番用.txt" | cat -s > "$DST/robots.txt"
 cp "$SRC/_301_本番用.htaccess.txt" "$DST/.htaccess"
 cp "$FORM/send.php" "$DST/send.php"
+# ★2026-10-18 じろう：J-DRYはサイトに電話番号を載せない（2026-10-01 社長判断）。送信失敗時の「お電話で」を、
+#   サイトに実在する連絡先＝Instagram（@jdry.food2025・全ページのフッターにある）に差し替える。共通の型（templates）は触らない。
+node -e "const fs=require('fs'),f=process.argv[1];fs.writeFileSync(f,fs.readFileSync(f,'utf8').split('お手数ですがお電話でご連絡ください。').join('時間をおいて再度お試しいただくか、Instagram（@jdry.food2025）のメッセージでご連絡ください。'))" "$DST/send.php"
 cp "$SRC/_form-config_本番用.php" "$DST/form-config.php"
 
 echo "=== ⑥ sitemap.xml（lastmod=$TODAY）"
 sh "$SHARED/make-sitemap.sh" "$DST" "$BASE" "$TODAY" | sed 's/^/    /'
+
+echo "=== ⑥b GA4 計測タグ（2026-10-13 社長「GA4やろう」・プロパティ 558606234）"
+node C:/HQ/projects/_shared/keisoku/inject-ga4.mjs "$DST" G-3V8M0BP84E | sed 's/^/    /'
+# ★2026-10-18 じろう：計測スクリプト（analytics-events.js）の冒頭注記に社内の名前が入っているので、GA4を入れた後にもう一度コメントを剥がす
+#   （GA4のタグにはコメントが無い・analytics-events.js の文字列に /* は無い＝実読で確認）
+node "$STRIP" "$DST" | sed 's/^/    /'
 
 echo "=== ⑦ 点検"
 NG=0
@@ -74,6 +83,7 @@ for f in .md KENPIN README _line _301 _robots _form-config .bak; do
   N=$(find "$DST" -name "*$f*" | grep -c . || true)
   [ "$N" -gt 0 ] && { echo "    🔴 混入: $f が $N 件"; NG=1; }
 done
+N=$(grep -c "電話" "$DST/send.php" || true); [ "$N" -gt 0 ] && { echo "    🔴 send.php に「電話」が残っている（$N 行）"; NG=1; }
 grep -q 'action="send.php"' "$DST/contact.html" && echo "    フォーム送信先        send.php" || { echo "    🔴 フォーム送信先が send.php でない"; NG=1; }
 if [ "$FORM_TO_CONFIRMED" != "1" ]; then
   echo "    🔴 フォーム受信先（$(grep -o "'to' *=> *'[^']*'" "$DST/form-config.php")）は社長確認待ち。確認後に FORM_TO_CONFIRMED=1 を付けて流し直す"

@@ -10,6 +10,33 @@
   /* ---------- メインスライダー ----------
      PC用(#top_slider)とスマホ用(#sp_slider・本物のsp_mainvisual準拠)の
      2つのスライダーを同じ仕組みで初期化する。表示切替はCSSメディアクエリ側で行う。 */
+  /* ---------- スライドの2枚目以降は、ページを読み終えてから読む（★2026-10-18 じろう） ----------
+     スマホでPC用の写真（とその逆）まで最初に全部読んでいたため、1枚目の写真と回線を取り合って
+     表示が遅れていた（Lighthouse モバイル LCP 4.6秒）。
+     ・1枚目は今までどおりすぐ読む（見えない方の幅では <picture> で読まない）
+     ・2枚目以降は data-src に置き、load の後で「いま見えている方のスライダー」だけ読む
+     ・画面幅が変わって反対側のスライダーが出たら、その時に読む */
+  function loadImg(im) {
+    var src = im.getAttribute('data-src');
+    if (!src) return;
+    im.removeAttribute('data-src');
+    im.src = src;
+  }
+  function loadDeferredSlides() {
+    ['top_slider', 'sp_slider'].forEach(function (id) {
+      var el = document.getElementById(id);
+      if (!el || getComputedStyle(el).display === 'none') return;
+      Array.prototype.forEach.call(el.querySelectorAll('img[data-src]'), loadImg);
+    });
+  }
+  if (document.readyState === 'complete') { setTimeout(loadDeferredSlides, 0); }
+  else { window.addEventListener('load', loadDeferredSlides); }
+  if (window.matchMedia) {
+    var mqSlide = window.matchMedia('(max-width:820px)');
+    var onMq = function () { if (document.readyState === 'complete') loadDeferredSlides(); };
+    if (mqSlide.addEventListener) mqSlide.addEventListener('change', onMq); else if (mqSlide.addListener) mqSlide.addListener(onMq);
+  }
+
   function initSlider(slider) {
     if (!slider) return;
     var slides = Array.prototype.slice.call(slider.querySelectorAll('.slide'));
@@ -37,10 +64,19 @@
       slides[idx].classList.remove('is-active');
       if (dots[idx]) dots[idx].classList.remove('is-active');
       idx = (n + slides.length) % slides.length;
+      var tim = slides[idx].querySelector('img'); if (tim) loadImg(tim); // ドットで飛んだ時も読む
       slides[idx].classList.add('is-active');
       if (dots[idx]) dots[idx].classList.add('is-active');
     }
-    function next() { go(idx + 1); }
+    function next() {
+      slider.classList.add('is-started'); // 1枚目を最初から見せる指定（CSS）はここで外す
+      // ★2026-10-18 じろう：2枚目以降は後から読む（loadDeferredSlides）。まだ届いていない写真には切り替えない
+      //   （届く前に切り替えると白い面がふわっと出る）。届いていなければ次の回に持ち越す。
+      var im = slides[(idx + 1) % slides.length].querySelector('img');
+      if (im && im.getAttribute('data-src') && slider.offsetParent !== null) loadImg(im); // 見えていない方のスライダーは読まない
+      if (im && !(im.complete && im.naturalWidth > 1)) return;
+      go(idx + 1);
+    }
     function restart() { if (timer) clearInterval(timer); timer = setInterval(next, INTERVAL); }
 
     slides[0].classList.add('is-active');

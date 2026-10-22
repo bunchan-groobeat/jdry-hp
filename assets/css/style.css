@@ -98,6 +98,17 @@ h1,h2,h3,p{ margin:0; }
   color:#fff; background:var(--base);
 }
 .global_menu ul ul a:hover{ background:var(--accent); color:#fff; }
+/* ★2026-10-18 じろう：画面幅 821〜1023px（iPad 縦 834 など）で横一列のメニューが画面より広くなり、
+   WEBSTORE（通販の入口）が右の画面外に出ていた。この幅だけ文字を縮めた時と同じ大きさ（1rem）にし、
+   左右の余白を画面幅に合わせて詰める（1024px 以上・820px 以下は今までどおり）。 */
+@media (min-width:821px) and (max-width:1023px){
+  .global_menu > ul > li > a,
+  #header.is-stuck .global_menu > ul > li > a{
+    font-size:1rem; letter-spacing:.02em;
+    padding-left:clamp(12px, calc((100vw - 660px) / 12), 26px);
+    padding-right:clamp(12px, calc((100vw - 660px) / 12), 26px);
+  }
+}
 
 /* モバイル用ハンバーガー（PCでは非表示） */
 #nav_toggle{ display:none; }
@@ -150,7 +161,13 @@ h1,h2,h3,p{ margin:0; }
 #top_slider .slide{ position:absolute; inset:0; opacity:0; transition:opacity 1.8s ease-in-out; }
 #top_slider .slide:first-child{ position:relative; }
 #top_slider .slide.is-active{ opacity:1; z-index:1; }
+/* ★2026-10-18 じろう：1枚目はJSを待たずに最初から見せる（今までは JS が動いてから1.8秒かけて浮かせていた。
+   その間はオープニングの白い幕の下なので見た目は同じ。待つ分だけスマホの表示完了＝LCPが約2秒遅れていた）。
+   最初の切り替えで main.js が .is-started を付けたら、いつもの切り替えに戻る */
+#top_slider:not(.is-started) .slide:first-child,
+#sp_slider:not(.is-started) .slide:first-child{ opacity:1; }
 #top_slider .slide img{ width:100%; display:block; }
+#top_slider .slide picture, #sp_slider .slide picture{ display:block; } /* ★2026-10-18 1枚目を <picture> で包んだ分（見た目は前と同じ） */
 .slider_dots{ position:absolute; left:0; right:0; bottom:15px; text-align:center; }
 .slider_dots button{
   width:12px; height:12px; margin:0 6px; padding:0; border:none; border-radius:50%;
@@ -213,7 +230,12 @@ h1,h2,h3,p{ margin:0; }
 /* ★2026-09-08 社長「画像あと一回り大きくして」＝580px → 680px（約1.17倍）。
    HTMLの width="580" 属性より、こちらの指定が優先される。
    ★1つ目の帯（低温乾燥技術）も同じ画像・同じ組みなので揃えた。片方だけ大きいと不揃いに見えるため。 */
+/* ★2026-10-18 じろう：回るお皿の画像を、お皿の円にぴったりの正方形（424×424・webp）に切り直した。
+   元の 580×420 の長方形は回ると角が外へ出て、PC1280で横に最大24px揺れていた。
+   お皿の大きさは前と同じ（元の幅 × 424/580）。正方形なので回っても角の出っ張りが小さく、画面の外に出ない。
 .index_band .band_image img{ width:100%; max-width:680px; height:auto; }
+   正方形にした分（縦が 420→424 の比で約1%高い）は上下の負のマージンで打ち消し、帯の高さも前と同じにする。 */
+.index_band .band_image img.spin-in{ width:calc(100% * 424 / 580); max-width:calc(680px * 424 / 580); margin:calc(min(100%, 680px) * -2 / 580) 0; }
 /* ★2026-09-08 社長「もう少し小さく中央寄せで見やすく」。42px→34px相当・中央揃え・行間を詰めた */
 .index_band .headline{ font-size:1.6rem; line-height:1.6; font-weight:bold; margin:0 0 18px; font-family:var(--mincho); text-align:center; }
 /* ★2026-09-08 社長「タイトルと文章のサイズ考え見やすく」。
@@ -591,6 +613,16 @@ h1,h2,h3,p{ margin:0; }
 }
 .contact_form input:focus,.contact_form textarea:focus{ outline:none; border-color:var(--accent); }
 .contact_form textarea{ min-height:180px; resize:vertical; }
+/* ★2026-10-18 じろう：プライバシーポリシー（お問い合わせと同じ幅・同じ帯の型。見出しは明朝で他ページに合わせる） */
+.privacy_wrap h2{ font-family:var(--mincho); font-size:1.15rem; font-weight:bold; margin:44px 0 14px; padding-bottom:8px; border-bottom:1px solid var(--beige-line); }
+.privacy_wrap p, .privacy_wrap li, .privacy_wrap dd, .privacy_wrap dt{ font-size:.95rem; line-height:2; }
+.privacy_wrap p{ margin:0 0 14px; }
+.privacy_wrap ul{ margin:0 0 14px; padding-left:1.4em; list-style:disc; }
+.privacy_wrap a{ text-decoration:underline; text-underline-offset:3px; overflow-wrap:anywhere; }
+.privacy_dl{ display:grid; grid-template-columns:6em 1fr; gap:4px 12px; margin:0; }
+.privacy_dl dt{ font-weight:bold; }
+.privacy_dl dd{ margin:0; }
+.privacy_date{ margin-top:44px !important; text-align:right; color:#666; }
 .form_status{ margin:20px 0 0; padding:14px 16px; border-radius:4px; font-size:1rem; line-height:1.7; text-align:center; }
 .form_status.is-pending{ background:#f3f1ec; color:var(--base); }
 .form_status.is-success{ background:#eaf5ea; color:#2e7d32; border:1px solid #c3e2c3; }
@@ -617,6 +649,9 @@ h1,h2,h3,p{ margin:0; }
 #footer_social svg{ display:block; }
 #footer_bottom{ height:80px; }
 #copyright{ text-align:center; line-height:80px; font-size:0.86rem; color:#888; }
+/* ★2026-10-18 じろう：プライバシーポリシーへの入口。スマホではフッターのメニューが消えるので、全幅で見える著作権表示の行に並べる */
+#copyright .privacy_link{ color:inherit; margin-right:1.6em; }
+#copyright .privacy_link:hover{ color:var(--accent); }
 
 /* ページ上部へ戻る */
 #return_top{ position:fixed; right:20px; bottom:24px; width:50px; height:50px; border-radius:50%;
@@ -689,6 +724,7 @@ h1,h2,h3,p{ margin:0; }
   .index_band .desc{ font-size:1rem; line-height:2; margin:0 0 12px; }
   .index_band .band_image{ flex:none; width:90%; margin:10px auto 0; }
   .index_band .band_image img{ width:100%; height:auto; max-width:none; }
+  .index_band .band_image img.spin-in{ width:calc(100% * 424 / 580); max-width:none; margin:calc(100% * -2 / 580) 0; }
   .index_band.reverse .band_inner{ flex-direction:column-reverse; padding:30px 15px; }
   .index_band.reverse .band_image{ margin:0 auto 30px; }
   .index_band .link_button{ display:block; width:max-content; max-width:100%; height:auto; line-height:1.7; padding:14px 24px; margin:10px auto 0; text-align:center; white-space:normal; }
